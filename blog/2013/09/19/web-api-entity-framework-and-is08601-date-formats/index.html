@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Web Api, Entity Framework and ISO 8601 Date Formats - Sean Kenny</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="For those using Web Api to deliver json payloads, you might come across an issue relating to dates, more specifically, timezones. The ISO8601 date &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.seankenny.me/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Raleway|Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-52395142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Kenny</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.seankenny.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/srkenny">@srkenny</a></li>
+  <li><a href="https://github.com/seankenny">Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Web Api, Entity Framework and ISO 8601 Date Formats</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-19T17:50:00+01:00" pubdate data-updated="true">19 Sep 2013</time>
+ • <a href="">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>For those using Web Api to deliver json payloads, you might come across an issue relating to dates, more specifically, timezones.</p>
+
+<p>The <code>ISO8601</code> date format is becoming the defacto format for date strings and is now the default for the default Web Api serialiser, <a href="http://james.newtonking.com/pages/json-net.aspx">Json.Net</a>.</p>
+
+<p>The <code>ISO8601</code> date specification explicitly states what happens when the <code>TZD</code> (or time zone designator) is ommited.  Read more <a href="http://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators">here</a>. It states:</p>
+
+<!--more-->
+
+
+<blockquote><p>If no UTC relation information is given with a time representation, the time is assumed to be in local time.</p></blockquote>
+
+<h3>Entity Framework</h3>
+
+<p>We should always store datetime as UTC in the database.  However, when we are retrieving an Entity Framework model, date properties are given a <code>DateTime.DateKind</code> of <code>Unspecified</code>.  When the Json.Net serialiser serialises this, it has to assume that the datetime is not UTC and so the date will serialise to a string as <code>2013-09-19T07:00:00</code> rather than <code>2013-09-19T07:00:00Z</code> &lt;&mdash; see the &lsquo;Z&rsquo; bit? That&rsquo;s the <code>TZD</code> UTC indicator.  This is a fair call from Json.Net.</p>
+
+<p>There is no easy way to get Entity Framework (Code First) to set the DateKind to UTC without either reflecting through each and every property when a model is retrieved by the <code>DbContext</code> (by subscribing to the <code>ObjectContext.ObjectMaterialized</code> event) or by adopting a more manual approach using:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">DateTime</span><span class="p">.</span><span class="n">SpecifyKind</span><span class="p">(</span><span class="n">myDate</span><span class="p">,</span> <span class="n">DateTimeKind</span><span class="p">.</span><span class="n">Utc</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>on each datetime property.</p>
+
+<h3>EcmaScript 5</h3>
+
+<p>Now onto another (related) issue.  For some reason I cannot fathom, the ECMAScript 5 ISO8601 specification differs fundamentally from the <a href="http://es5.github.io/#x15.9.1.15">ISO spec</a>:</p>
+
+<blockquote><p>The value of an absent time zone offset is “Z”.</p></blockquote>
+
+<p>So those implementing to the ISO spec will handle the date as 7am local time whereas those implementing to ECMAScript 5 spec will handle as 7am UTC.  Not nice.</p>
+
+<p>To handle this, we need to always pass UTC dates from our web Api and, because we are doing this, we can enforce the serialiser to append the UTC <code>TZD</code> of <code>Z</code> by adding this to the Web Api configuration:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'> <span class="kt">var</span> <span class="n">jsonFormatter</span> <span class="p">=</span> <span class="n">GlobalConfiguration</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">;</span>
+</span><span class='line'> <span class="n">jsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">DateTimeZoneHandling</span> <span class="p">=</span> <span class="n">DateTimeZoneHandling</span><span class="p">.</span><span class="n">Utc</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a pretty blunt approach but it works p</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-19T17:50:00+01:00" pubdate data-updated="true">19 Sep 2013</time>
+ • <a href="">permalink</a>
+  
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/entity-framework/'>entity framework</a>, <a class='category' href='/blog/categories/iso-8601/'>iso 8601</a>, <a class='category' href='/blog/categories/web-api/'>web api</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/" title="Previous Post: 404 with relative paths and the Web Optimization Framework">&laquo; 404 with relative paths and the Web Optimization Framework</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/09/29/preloading-angularjs-data-in-net-land/" title="Next Post: Preloading AngularJS data in .Net land">Preloading AngularJS data in .Net land &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sean Kenny -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'seankenny';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.seankenny.me/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/';
+        var disqus_url = 'http://www.seankenny.me/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

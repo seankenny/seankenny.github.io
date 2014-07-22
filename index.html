@@ -1,1 +1,608 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Sean Kenny</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="There are a few different ways to pretty print objects as html in C#. We have a requirement to pretty print what might be XML or Json. The following &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.seankenny.me">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Raleway|Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-52395142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Kenny</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.seankenny.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/srkenny">@srkenny</a></li>
+  <li><a href="https://github.com/seankenny">Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number/">Pretty Printing Xml or Json in HTML With C#</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-28T12:10:00+01:00" pubdate data-updated="true">28 Jun 2014</time>
+ • <a href="/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are a few different ways to pretty print objects as html in C#.  We have a requirement to pretty print what might be XML or Json.  The following extension method does the trick:
+ </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/27/angular-modules-module-not-found/">Angular Modules - Module Not Found</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-27T19:42:00+01:00" pubdate data-updated="true">27 Jun 2014</time>
+ • <a href="/blog/2014/06/27/angular-modules-module-not-found/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This little one caught me out for an hour or two.  Moving away from the global &lsquo;app&rsquo; variable in angularJs, I started using the angular.module syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;UserHandler&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/27/angular-modules-module-not-found/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix/">Deserialisation and Constructor Logic Don&#8217;t Mix</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-10T20:11:00+01:00" pubdate data-updated="true">10 Jun 2014</time>
+ • <a href="/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I got caught on this one last week. I was load testing a web api resource using ApacheBench and was getting some really bad perf figures in the region of 40 req/sec when I would have expected an order of magnitude more at least.  The data model being sent as JSON was:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/04/web-api-with-dot-in-the-route/">Web Api With Dot in the Route</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-04T17:58:00+01:00" pubdate data-updated="true">04 Jun 2014</time>
+ • <a href="/blog/2014/06/04/web-api-with-dot-in-the-route/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We have a requirement to have a dot midway in a route for one of our web api services.  The route looks something like <code>http://localhost/api/some.route/person</code>.  The controller (if using attribute based routing) is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[RoutePrefix(&quot;api/some.route&quot;)]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">UsersController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="na">  [Route(&quot;person&quot;)]</span>
+</span><span class='line'>  <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">Person</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// do stuff</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/04/web-api-with-dot-in-the-route/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/">AngularJS XSRF in .Net Land - SlidingExpiration</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-22T19:52:00+00:00" pubdate data-updated="true">22 Jan 2014</time>
+ • <a href="/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So we have <a href="http://seankenny.me/blog/2014/01/20/angularjs-xsrf-in-net-land/">XSRF built into our app</a> and all is well.  Now we set the slidingExpiration=&ldquo;true&rdquo; in our web.config file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;authentication</span> <span class="na">mode=</span><span class="s">&quot;Forms&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;forms</span> <span class="na">loginUrl=</span><span class="s">&quot;~/Account/Login&quot;</span> <span class="na">timeout=</span><span class="s">&quot;2880&quot;</span> <span class="na">slidingExpiration=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/authentication&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/20/angularjs-xsrf-in-net-land/">AngularJS XSRF in .Net Land</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-20T18:31:00+00:00" pubdate data-updated="true">20 Jan 2014</time>
+ • <a href="/blog/2014/01/20/angularjs-xsrf-in-net-land/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ah yes, <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">XSRF</a>.</p>
+
+<p>So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne&#8217;er-do-well.</p>
+
+<p>In ASP.Net MVC it&rsquo;s pretty straighforward.  In your Razor file, just add an <code>Html.AntiForgeryToken()</code> into the form in question and then, on the action, add a <code>[ValidateAntiForgeryToken]</code> filter and all is well.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/20/angularjs-xsrf-in-net-land/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/05/camelcasejson/">CamelCaseJson</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-05T10:49:00+00:00" pubdate data-updated="true">05 Jan 2014</time>
+ • <a href="/blog/2014/01/05/camelcasejson/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I prefer JSON camel cased.  The default setup in ASP.net Web Api using the Newtonsoft JsonSerializer is for Pascal Case.  To switch to camel case is easy and makes for a much more seamless angularJS and Web Api interaction.  In the WebAPiConfig class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="kt">var</span> <span class="n">jsonFormatter</span> <span class="p">=</span> <span class="n">GlobalConfiguration</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">;</span>
+</span><span class='line'><span class="n">jsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">ContractResolver</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CamelCasePropertyNamesContractResolver</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/02/angularjs-formsauthentication-in-net-land/">AngularJS FormsAuthentication in .Net Land</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-02T18:31:00+01:00" pubdate data-updated="true">02 Oct 2013</time>
+ • <a href="/blog/2013/10/02/angularjs-formsauthentication-in-net-land/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are a number of ways to authenticate an angularJS application.  This is the one I am currently using.  It uses a <code>FormsAuthentication</code> cookie in the same way as a regular ASP.Net WebForms/MVC app would.</p>
+
+<p>The structure is basically Web Api, a single MVC home controller with an Index.cshtml and angular.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/02/angularjs-formsauthentication-in-net-land/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/29/preloading-angularjs-data-in-net-land/">Preloading AngularJS Data in .Net Land</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-29T17:17:00+01:00" pubdate data-updated="true">29 Sep 2013</time>
+ • <a href="/blog/2013/09/29/preloading-angularjs-data-in-net-land/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When an angularjs site initially starts up, it can take a little time for all the various HTTP requests to complete.</p>
+
+<p>HTTP requests</p>
+
+<ul>
+<li>GET Index.cshtml</li>
+<li>GET the various JS and CSS files (hopefully only one minified version of each)
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/09/29/preloading-angularjs-data-in-net-land/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/">Web Api, Entity Framework and ISO 8601 Date Formats</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-19T17:50:00+01:00" pubdate data-updated="true">19 Sep 2013</time>
+ • <a href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those using Web Api to deliver json payloads, you might come across an issue relating to dates, more specifically, timezones.</p>
+
+<p>The <code>ISO8601</code> date format is becoming the defacto format for date strings and is now the default for the default Web Api serialiser, <a href="http://james.newtonking.com/pages/json-net.aspx">Json.Net</a>.</p>
+
+<p>The <code>ISO8601</code> date specification explicitly states what happens when the <code>TZD</code> (or time zone designator) is ommited.  Read more <a href="http://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators">here</a>. It states:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/2">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sean Kenny -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'seankenny';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

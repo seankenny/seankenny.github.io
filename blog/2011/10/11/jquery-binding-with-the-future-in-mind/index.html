@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JQuery Binding With the Future in Mind - Sean Kenny</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="This was something that confused me for a while when I started JQuery – binding. You add a new html element and want to bind to a click event for &hellip;">
+  <meta name="keywords" content="jquery binding">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.seankenny.me/blog/2011/10/11/jquery-binding-with-the-future-in-mind">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Raleway|Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-52395142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Kenny</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.seankenny.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/srkenny">@srkenny</a></li>
+  <li><a href="https://github.com/seankenny">Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">JQuery Binding With the Future in Mind</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-11T18:53:00+01:00" pubdate data-updated="true">11 Oct 2011</time>
+ • <a href="">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This was something that confused me for a while when I started JQuery – binding.  You add a new html element and want to bind to a click event for example on that element. Sounds straightforward.</p>
+
+<p>We have 2 divs, the first being static and the second being a placeholder that we will dynamically add more html elements to.</p>
+
+<!--more-->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;ClickMe&#39;</span><span class="nt">&gt;</span>Click on me!<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;placeholder&#39;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We add our elements using JQuery like this</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">newItems</span> <span class="o">=</span> <span class="s1">&#39;&lt;div id=&quot;ClickMeToo&quot;&gt;Click on me as well!&lt;/div&gt;&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#placeholder&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">newItems</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we browse to the page, as expected, we get the 2 divs.</p>
+
+<p>Now we can add the click events:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">newItems</span> <span class="o">=</span> <span class="s1">&#39;&lt;div id=&quot;ClickMeToo&quot;&gt;Click on me as well!&lt;/div&gt;</span>
+</span><span class='line'><span class="s1">   </span>
+</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">placeholder</span><span class="s1">&#39;).html(newItems);  </span>
+</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">ClickMe</span><span class="s1">&#39;).click(function () {  </span>
+</span><span class='line'><span class="s1">    alert(&#39;</span><span class="nx">I</span> <span class="nx">always</span> <span class="nx">work</span><span class="s1">&#39;);  </span>
+</span><span class='line'><span class="s1">  });  </span>
+</span><span class='line'><span class="s1"> </span>
+</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">ClickMeToo</span><span class="s1">&#39;).click(function () {  </span>
+</span><span class='line'><span class="s1">    alert(&#39;</span><span class="nx">I</span> <span class="nx">don</span><span class="s1">&#39;t work...&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But the second click event does not work.  Why?  Well the answer is that the <code>ClickMeToo</code> element does not exist when the JQuery does it’s binding and the new div we added is left out in the cold.</p>
+
+<p>To resolve this, all we need to do is to amend the code $(‘#ClickMeToo’).click(function () { to the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#ClickMeToo&#39;</span><span class="p">).</span><span class="nx">live</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;I&#39;m gonna work now!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>live</code> method tells JQuery to bind for all existing and future matches to the selector.</p>
+
+<p>EDIT: the <code>live</code> binding is now deprecated &ndash; use <code>on</code> instead!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-11T18:53:00+01:00" pubdate data-updated="true">11 Oct 2011</time>
+ • <a href="">permalink</a>
+  
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jquery/'>jquery</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/11/something-i-learned-today-declaritive-authorization/" title="Next Post: Something I learned today – Declaritive Authorization">Something I learned today – Declaritive Authorization &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sean Kenny -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'seankenny';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://www.seankenny.me/blog/2011/10/11/jquery-binding-with-the-future-in-mind/';
+        var disqus_url = 'http://www.seankenny.me/blog/2011/10/11/jquery-binding-with-the-future-in-mind/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

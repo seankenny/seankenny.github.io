@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Entity Framework | Sean Kenny]]></title>
+  <link href="http://www.seankenny.me/blog/categories/entity-framework/atom.xml" rel="self"/>
+  <link href="http://www.seankenny.me/"/>
+  <updated>2014-07-22T19:30:05+01:00</updated>
+  <id>http://www.seankenny.me/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api, Entity Framework and ISO 8601 Date Formats]]></title>
+    <link href="http://www.seankenny.me/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/"/>
+    <updated>2013-09-19T17:50:00+01:00</updated>
+    <id>http://www.seankenny.me/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats</id>
+    <content type="html"><![CDATA[<p>For those using Web Api to deliver json payloads, you might come across an issue relating to dates, more specifically, timezones.</p>
+
+<p>The <code>ISO8601</code> date format is becoming the defacto format for date strings and is now the default for the default Web Api serialiser, <a href="http://james.newtonking.com/pages/json-net.aspx">Json.Net</a>.</p>
+
+<p>The <code>ISO8601</code> date specification explicitly states what happens when the <code>TZD</code> (or time zone designator) is ommited.  Read more <a href="http://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators">here</a>. It states:</p>
+
+<!--more-->
+
+
+<blockquote><p>If no UTC relation information is given with a time representation, the time is assumed to be in local time.</p></blockquote>
+
+<h3>Entity Framework</h3>
+
+<p>We should always store datetime as UTC in the database.  However, when we are retrieving an Entity Framework model, date properties are given a <code>DateTime.DateKind</code> of <code>Unspecified</code>.  When the Json.Net serialiser serialises this, it has to assume that the datetime is not UTC and so the date will serialise to a string as <code>2013-09-19T07:00:00</code> rather than <code>2013-09-19T07:00:00Z</code> &lt;&mdash; see the &lsquo;Z&rsquo; bit? That&rsquo;s the <code>TZD</code> UTC indicator.  This is a fair call from Json.Net.</p>
+
+<p>There is no easy way to get Entity Framework (Code First) to set the DateKind to UTC without either reflecting through each and every property when a model is retrieved by the <code>DbContext</code> (by subscribing to the <code>ObjectContext.ObjectMaterialized</code> event) or by adopting a more manual approach using:</p>
+
+<p><code>c#
+DateTime.SpecifyKind(myDate, DateTimeKind.Utc);
+</code></p>
+
+<p>on each datetime property.</p>
+
+<h3>EcmaScript 5</h3>
+
+<p>Now onto another (related) issue.  For some reason I cannot fathom, the ECMAScript 5 ISO8601 specification differs fundamentally from the <a href="http://es5.github.io/#x15.9.1.15">ISO spec</a>:</p>
+
+<blockquote><p>The value of an absent time zone offset is “Z”.</p></blockquote>
+
+<p>So those implementing to the ISO spec will handle the date as 7am local time whereas those implementing to ECMAScript 5 spec will handle as 7am UTC.  Not nice.</p>
+
+<p>To handle this, we need to always pass UTC dates from our web Api and, because we are doing this, we can enforce the serialiser to append the UTC <code>TZD</code> of <code>Z</code> by adding this to the Web Api configuration:</p>
+
+<p><code>c#
+ var jsonFormatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+ jsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+</code></p>
+
+<p>It&rsquo;s a pretty blunt approach but it works p</p>
+]]></content>
+  </entry>
+  
+</feed>

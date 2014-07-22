@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rails | Sean Kenny]]></title>
+  <link href="http://www.seankenny.me/blog/categories/rails/atom.xml" rel="self"/>
+  <link href="http://www.seankenny.me/"/>
+  <updated>2014-07-22T19:30:05+01:00</updated>
+  <id>http://www.seankenny.me/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Something I Learned Today – Declaritive Authorization]]></title>
+    <link href="http://www.seankenny.me/blog/2012/01/11/something-i-learned-today-declaritive-authorization/"/>
+    <updated>2012-01-11T18:53:00+00:00</updated>
+    <id>http://www.seankenny.me/blog/2012/01/11/something-i-learned-today-declaritive-authorization</id>
+    <content type="html"><![CDATA[<p>Well not exactly true.  We’ve been using this great gem for a while now on our first venture into Ruby on Rails.</p>
+
+<p>Ryan Bates over at RailsCasts has a great session on the topic.  We implemented the basic vanilla version on our RESTful controller actions and models and everything seemed to run fine after making a few tweaks.</p>
+
+<!--more-->
+
+
+<p>Then a funny thing happened.  One of the guys ran the db:migrate on a fresh database and when he tried to access a page that had an AJAX call on it, the ajax failed.  Looking at the console, we got an ActiveRecord exception.</p>
+
+<p><code>ruby
+Resource Load (0.2ms)  SELECT `resources`.* FROM `resources` WHERE (`resources`.`id` = 1) LIMIT 1
+ActiveRecord::RecordNotFound (Couldn't find Resource without an ID):
+</code></p>
+
+<p>The funny thing was that the action being accessed did not call anything relating to the Resource model.  It’s an Ajax/JSON action just for a dropdown filter on the page.</p>
+
+<p>It took a while to figure and it boiled down to RTFM!  Declaritive Authorizaton will always load up the model for each action in your locked down controller in order to figure out if the thread has access.  News to me although it does mean that we were able to remove all the model finds, etc., in our RESTful actions show, new, edit..).</p>
+
+<p>To fix this particular issue, all that is required is to tell create a dummy model prior to DA kicking in.</p>
+
+<p>```ruby
+class Admin::ResourcesController &lt; Admin::BaseController
+  before_filter :new_resource, :only => :for_resource_type_id
+  filter_resource_access</p>
+
+<p>  def for_resource_type_id</p>
+
+<pre><code>@resourcegroups = ResourceGroup.where('resource_type_id = ?', params[:id])
+render :json =&gt; @resourcegroups
+</code></pre>
+
+<p>  end</p>
+
+<p>  private
+  def new_resource</p>
+
+<pre><code>@resource = Resource.new
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Easy when you know how.</p>
+]]></content>
+  </entry>
+  
+</feed>

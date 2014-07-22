@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: asp.net | Sean Kenny]]></title>
+  <link href="http://www.seankenny.me/blog/categories/asp-dot-net/atom.xml" rel="self"/>
+  <link href="http://www.seankenny.me/"/>
+  <updated>2014-07-22T19:30:05+01:00</updated>
+  <id>http://www.seankenny.me/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Deserialisation and Constructor Logic Don't Mix]]></title>
+    <link href="http://www.seankenny.me/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix/"/>
+    <updated>2014-06-10T20:11:00+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix</id>
+    <content type="html"><![CDATA[<p>I got caught on this one last week. I was load testing a web api resource using ApacheBench and was getting some really bad perf figures in the region of 40 req/sec when I would have expected an order of magnitude more at least.  The data model being sent as JSON was:</p>
+
+<!--more-->
+
+
+<p>```c#
+public class LogMessage
+{</p>
+
+<pre><code>    public ulong PhysicalMemory { get; set; }
+    // lots more properties
+
+    public LogMessage()
+    {
+              var ci = new ComputerInfo();
+              AvailablePhysicalMemory = ci.AvailablePhysicalMemory;
+    }
+</code></pre>
+
+<p>}
+<code>``
+When deserialising the request body into the dataModel, the constructor gets called and we have the overhead of the **slow**</code>ComputerInfo().AvailablePhysicalMemory` call to get the available memory of the machine.  Multiply this in a load test scenario and there&rsquo;s the culprit.</p>
+
+<p>The fix is simple:</p>
+
+<p>```c#
+public class LogMessage
+{</p>
+
+<pre><code>    public ulong AvailablePhysicalMemory { get; set; }
+
+    public void Init()
+    {
+              var ci = new ComputerInfo();
+              AvailablePhysicalMemory = ci.AvailablePhysicalMemory;
+    }
+</code></pre>
+
+<p>}
+```</p>
+
+<p>The client changes to:</p>
+
+<p><code>c#
+var message = new LogMessage().Init();
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api With Dot in the Route]]></title>
+    <link href="http://www.seankenny.me/blog/2014/06/04/web-api-with-dot-in-the-route/"/>
+    <updated>2014-06-04T17:58:00+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/06/04/web-api-with-dot-in-the-route</id>
+    <content type="html"><![CDATA[<p>We have a requirement to have a dot midway in a route for one of our web api services.  The route looks something like <code>http://localhost/api/some.route/person</code>.  The controller (if using attribute based routing) is:</p>
+
+<p>```c#
+[RoutePrefix(&ldquo;api/some.route&rdquo;)]
+public class UsersController : ApiController
+{
+  [Route(&ldquo;person&rdquo;)]
+  public HttpResponseMessage Person(int id)
+  {</p>
+
+<pre><code>// do stuff
+</code></pre>
+
+<p>  }
+}
+<code>``
+ &lt;!--more--&gt;
+When you try to hit this resource using fiddler or postman, you'll get a 404 not found error.  There are plenty of StackOverflow posts out there about having dots in the route but these mainly are to do with a dot at the end of the route rather than midway so something like</code><a href="http://localhost/api/someroute/per.son">http://localhost/api/someroute/per.son</a>`.  IIS will identify the dot and assume you are after a static file with an extension of &lsquo;son&rsquo;.  To get around this, you can add this to your web.config file as explained by <a href="http://haacked.com/archive/2010/04/29/allowing-reserved-filenames-in-URLs.aspx">Phil Haack</a>.</p>
+
+<p><code>xml
+&lt;system.web&gt;
+  &lt;httpRuntime relaxedUrlToFileSystemMapping="true" /&gt;
+</code></p>
+
+<p>However this will not work where the dot is midway in the URL like I have.  For me, adding the following resolves the issue (although not having to have a dot in the route would be the obvious solution but sometimes your hands are tied).</p>
+
+<p>```xml
+&lt;system.webServer>
+  <handlers></p>
+
+<pre><code>&lt;add name="UrlRoutingHandler" type="System.Web.Routing.UrlRoutingHandler, System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" path="some.route/*" verb="*"/&gt;
+</code></pre>
+
+<p>```</p>
+
+<p>Adding this post as I <strong>KNOW</strong> I will forget this!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[404 With Relative Paths and the Web Optimization Framework]]></title>
+    <link href="http://www.seankenny.me/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/"/>
+    <updated>2013-09-04T18:54:00+01:00</updated>
+    <id>http://www.seankenny.me/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework</id>
+    <content type="html"><![CDATA[<p>We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for our web pages to load.  In .Net land, we might use the <a href="http://www.nuget.org/packages/microsoft.aspnet.web.optimization/">Microsoft ASP.NET Web Optimization Framework</a> to do this.</p>
+
+<p>There is sometimes an issue where a css file has a relative path reference to an image.  An example of this is in twitter bootstrap.  See that url?  That&rsquo;s a problem for us.</p>
+
+<!--more-->
+
+
+<p><code>css
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+</code></p>
+
+<p>We would create a bundle:</p>
+
+<p>```c#
+bundles.Add(new StyleBundle(&ldquo;~/styles/css&rdquo;).Include(</p>
+
+<pre><code>            "~/Content/bootstrap/css/bootstrap.css",
+            "~/Content/bootstrap/css/bootstrap-responsive.css",
+            "~/Content/site.css"));
+</code></pre>
+
+<p>```</p>
+
+<p>When we minify this and all our site specific stylesheets into a bundle and then render the HTML, we&rsquo;ll get a <code>404 HTTP NOT FOUND</code> exception that we can see in the chrome developer tools (under the <code>network</code> tab).  The bundle will be generated as &lsquo;styles/css/&rsquo; and the url will check for the image in <code>styles/css/../img/glyphicons-halflings.png</code>.</p>
+
+<p>Luckily there is an option in the optimization framework called <code>CssRewriteUrlTransform()</code> to handle this:</p>
+
+<p>```c#
+bundles.Add(new StyleBundle(&ldquo;~/styles/app&rdquo;).Include(</p>
+
+<pre><code>            "~/Content/bootstrap/css/bootstrap.css", new CssRewriteUrlTransform()).Include(
+            "~/Content/bootstrap/css/bootstrap-responsive.css",
+            "~/Content/site.css"));
+</code></pre>
+
+<p>```</p>
+
+<p>No more 404.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unit Testing ASP.Net MVC JSONResults]]></title>
+    <link href="http://www.seankenny.me/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/"/>
+    <updated>2013-05-02T17:40:00+01:00</updated>
+    <id>http://www.seankenny.me/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults</id>
+    <content type="html"><![CDATA[<p>Let&rsquo;s say we have a controller action that returns a <code>JsonResult</code> with an anonymous type:</p>
+
+<p>```c#
+public JsonResult Customer(int id)
+{</p>
+
+<pre><code>var customer = new { Id = id, Name = "John" };
+
+return Json(customer, JsonRequestBehavior.AllowGet);
+</code></pre>
+
+<p>}
+```</p>
+
+<!--more-->
+
+
+<p>We&rsquo;d like to test the response (using <a href="www.nunit.org">NUnit</a>).  We have a number of options here.</p>
+
+<h2>The &lsquo;Correct&rsquo; (AKA long) way</h2>
+
+<p>This approach is how the MVC framework tests work.  You can browse though it <a href="http://aspnetwebstack.codeplex.com/SourceControl/latest#test/System.Web.Mvc.Test/Test/JsonResultTest.cs">here</a>.  Here we are using <a href="https://code.google.com/p/moq/">Moq</a> to mock out the <code>HttpResponseBase</code> and the <code>ControllerContext</code>.  This allows us to grab what would normally be written to the <code>HttpContext.Response</code> and redirect into a <code>StringBuilder</code> object which we can interrogate later.</p>
+
+<p>```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var controller = new CustomerController();
+
+var result = controller.Customer(1);
+
+var sb = new StringBuilder();
+var mockResponse = new Mock&lt;HttpResponseBase&gt;();
+mockResponse.Setup(s =&gt; s.Write(It.IsAny&lt;string&gt;())).Callback&lt;string&gt;(c =&gt; sb.Append(c));
+
+var mockControllerContext = new Mock&lt;ControllerContext&gt;();
+mockControllerContext.Setup(x =&gt; x.HttpContext.Response).Returns(mockResponse.Object);
+
+result.ExecuteResult(mockControllerContext.Object);
+
+Assert.AreEqual(@"{""Id"":1,""Name"":""John""}", sb.ToString());    
+</code></pre>
+
+<p>}
+```</p>
+
+<p>We can make this a little easier to read and maintain by adding a serializer:
+```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var serializer = new JavaScriptSerializer();
+var controller = new CustomerController();
+
+var result = controller.Customer(1);
+
+var sb = new StringBuilder();
+var response = new Mock&lt;HttpResponseBase&gt;();
+response.Setup(s =&gt; s.Write(It.IsAny&lt;string&gt;())).Callback&lt;string&gt;(c =&gt; sb.Append(c));
+
+var controllerContext = new Mock&lt;ControllerContext&gt;();
+controllerContext.Setup(x =&gt; x.HttpContext.Response).Returns(response.Object);
+
+result.ExecuteResult(controllerContext.Object);
+
+var dynamicResponse = serializer.Deserialize&lt;dynamic&gt;(sb.ToString());
+
+Assert.AreEqual(1, dynamicResponse["Id"]);
+Assert.AreEqual("John", dynamicResponse["Name"]);
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>Utilising a serialiser</h2>
+
+<p>We are getting back a <code>JsonResult.Data</code> object.  It is is still an anoymous object and has not yet been serialized by the <code>HttpResponseBase</code> object.  The object looks like this:</p>
+
+<p><code>c#
+{ Id = 1; Name = "John" }
+</code>
+rather than this:</p>
+
+<p><code>javascript
+{ "Id" : "1"; "Name" : "John" }
+</code></p>
+
+<p>Two approaches here.  This first approach (much like the first test above) results in a pretty unreadable/unmaintainable test even providing your <code>JsonResult.Data</code> is small.  It is very easy to get the string output wrong and cause a false failing test.  It is quick and easy though.</p>
+
+<p>```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var serializer = new JavaScriptSerializer();
+var controller = new CustomerController();
+
+var response = controller.Customer(1);
+
+var serializedData = serializer.Serialize(response.Data);
+
+Assert.AreEqual(@"{""Id"":1,""Name"":""John""}", serializedData);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>This test is slightly better in that it is more readable but requires us to serialise the <code>response.Data</code> into a string, cast into a dynamic then deserialize back to a dynamic.</p>
+
+<p>```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var serializer = new JavaScriptSerializer();
+var controller = new CustomerController();
+
+var response = controller.Customer(1);
+
+var obj = serializer.Serialize(response.Data) as dynamic;
+var customer = serializer.Deserialize&lt;dynamic&gt;(obj);
+
+Assert.AreEqual(1, customer["Id"]);
+Assert.AreEqual("John", customer["Name"]);
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>Reflection</h2>
+
+<p>This test uses <code>Reflection</code> to get to the <code>JsonResult.Data</code>.  The code here could obviously be abstracted away into an extension method or some other such way but the bones of it are as follows.</p>
+
+<p>```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var controller = new CustomerController();
+
+var response = controller.Customer(1);
+var dataType = response.Data.GetType();
+
+Assert.AreEqual(1, dataType.GetProperty("Id").GetValue(response.Data));
+Assert.AreEqual("John", dataType.GetProperty("Name").GetValue(response.Data));
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>RouteValueDictionary</h2>
+
+<p>We can so it using a much easier approach using <code>RouteValueDictionary</code>.  I  quite like this approach although it is a little counter intuitive to use the <code>RouteValueDictionary</code> class for accessing an anonymous type.</p>
+
+<p>```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var controller = new CustomerController();
+
+var response = controller.Customer(1);
+var customer = new RouteValueDictionary(response.Data);
+
+Assert.AreEqual(1, customer["Id"]);
+Assert.AreEqual("John", customer["Name"]);
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>dynamic and <code>InternalsVisibleTo</code></h2>
+
+<hr />
+
+<p>Finally, we can use <code>dynamic</code>.  I much prefer the testing syntax of this approach but (there is always a &lsquo;but&rsquo;) there is an issue.  <code>JsonResult.Data</code> is an anonymous type and these are, by default, declared as <code>internal</code> to their assembly and most tests are declared in a seperate project so no access to internal anonymous types in the controller assembly.  By the time we get access to the <code>JsonResult.Data</code> we see it as an object.</p>
+
+<p>If we run our test below, we will get a <code>RuntimeBinderException</code> exception <code>'object' does not contain a definition for 'Id</code>.</p>
+
+<p>```c#
+[Test]
+public void GetCustomer_WhenGivenAnId_ReturnsValidCustomer()
+{</p>
+
+<pre><code>var controller = new CustomerController();
+
+var response = controller.Customer(1);
+dynamic customer = response.Data;
+
+Assert.That(1, customer.Id);
+Assert.That("John", customer.Name);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Adding <code>[assembly: InternalsVisibleTo("MyTestProject")]</code> attribute on the web project <code>AssemblyInfo.cs</code> class (in the <code>Properties</code> folder) will allow our test to access the <code>JsonResult.Data</code> anonymous type.  Re-run the test and all green.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Web Optimization Framework | Sean Kenny]]></title>
+  <link href="http://www.seankenny.me/blog/categories/web-optimization-framework/atom.xml" rel="self"/>
+  <link href="http://www.seankenny.me/"/>
+  <updated>2014-07-22T19:30:05+01:00</updated>
+  <id>http://www.seankenny.me/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[404 With Relative Paths and the Web Optimization Framework]]></title>
+    <link href="http://www.seankenny.me/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/"/>
+    <updated>2013-09-04T18:54:00+01:00</updated>
+    <id>http://www.seankenny.me/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework</id>
+    <content type="html"><![CDATA[<p>We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for our web pages to load.  In .Net land, we might use the <a href="http://www.nuget.org/packages/microsoft.aspnet.web.optimization/">Microsoft ASP.NET Web Optimization Framework</a> to do this.</p>
+
+<p>There is sometimes an issue where a css file has a relative path reference to an image.  An example of this is in twitter bootstrap.  See that url?  That&rsquo;s a problem for us.</p>
+
+<!--more-->
+
+
+<p><code>css
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+</code></p>
+
+<p>We would create a bundle:</p>
+
+<p>```c#
+bundles.Add(new StyleBundle(&ldquo;~/styles/css&rdquo;).Include(</p>
+
+<pre><code>            "~/Content/bootstrap/css/bootstrap.css",
+            "~/Content/bootstrap/css/bootstrap-responsive.css",
+            "~/Content/site.css"));
+</code></pre>
+
+<p>```</p>
+
+<p>When we minify this and all our site specific stylesheets into a bundle and then render the HTML, we&rsquo;ll get a <code>404 HTTP NOT FOUND</code> exception that we can see in the chrome developer tools (under the <code>network</code> tab).  The bundle will be generated as &lsquo;styles/css/&rsquo; and the url will check for the image in <code>styles/css/../img/glyphicons-halflings.png</code>.</p>
+
+<p>Luckily there is an option in the optimization framework called <code>CssRewriteUrlTransform()</code> to handle this:</p>
+
+<p>```c#
+bundles.Add(new StyleBundle(&ldquo;~/styles/app&rdquo;).Include(</p>
+
+<pre><code>            "~/Content/bootstrap/css/bootstrap.css", new CssRewriteUrlTransform()).Include(
+            "~/Content/bootstrap/css/bootstrap-responsive.css",
+            "~/Content/site.css"));
+</code></pre>
+
+<p>```</p>
+
+<p>No more 404.</p>
+]]></content>
+  </entry>
+  
+</feed>
