@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Node | Sean Kenny]]></title>
+  <link href="http://seankenny.github.io/blog/categories/node/atom.xml" rel="self"/>
+  <link href="http://seankenny.github.io/"/>
+  <updated>2014-07-22T19:17:39+01:00</updated>
+  <id>http://seankenny.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[NPM - ERR! Registry Error Parsing Json]]></title>
+    <link href="http://seankenny.github.io/blog/2013/08/04/npm-err-registry-error-parsing-json/"/>
+    <updated>2013-08-04T14:44:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/08/04/npm-err-registry-error-parsing-json</id>
+    <content type="html"><![CDATA[<p>Today I upgraded to node 0.10.15 and just ran npm install on a project I am working on.  I started seeing a lot of these failures:</p>
+
+<pre><code>npm - ERR! registry error parsing json
+npm - ERR! SyntaxError: Unexpected token &lt;
+</code></pre>
+
+<p>I had already run the npm install command maybe 30 minutes previously so I thought it might be something to do with the node/npm versions so I did the usual and rolled back.  Same issue.  Ok so maybe a corrupt module or something?  <code>npm cache clean</code> was next.  Still no change.</p>
+
+<!--more-->
+
+
+<p>Ok so what the heck is going on?  Looking a bit more closely showed that npm appeared to be setting the mime type to html on the reponse.  Hang on &ndash; the npm registry does not return html.  So somewhere along the line a proxy or some other intermediary was setting the type.</p>
+
+<p>Anyway, long story short &ndash; reboot of the laptop and we were back in business.  I can only guess that, with the various upgrade installs and some other tasks I was running, something caused this mess.</p>
+
+<p>Just one of those things.</p>
+]]></content>
+  </entry>
+  
+</feed>

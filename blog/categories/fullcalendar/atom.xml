@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Fullcalendar | Sean Kenny]]></title>
+  <link href="http://seankenny.github.io/blog/categories/fullcalendar/atom.xml" rel="self"/>
+  <link href="http://seankenny.github.io/"/>
+  <updated>2014-07-22T19:17:39+01:00</updated>
+  <id>http://seankenny.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[FullCalendar - With a Resource Day View!]]></title>
+    <link href="http://seankenny.github.io/blog/2013/08/14/fullcalendar-with-a-resource-day-view/"/>
+    <updated>2013-08-14T19:29:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/08/14/fullcalendar-with-a-resource-day-view</id>
+    <content type="html"><![CDATA[<p><a href="http://arshaw.com/fullcalendar/">FullCalendar</a> is a JavaScript calendar JQuery plug-in.  I&rsquo;ve used it now on 2 projects and it&rsquo;s just great.</p>
+
+<p>So on another project, we needed to be able to see the calendar agenda day view with it split into vertical columns for each &lsquo;resource&rsquo;.  There are a few forks that are doing this with FullCalendar but they aren&rsquo;t really suitable for us.  One has resource rows rather than columns and the other is a fork of an old version of the FullCalendar code.</p>
+
+<p>So I went ahead and forked the source on github.  The goal was to keep the forked version as similar to the core as possible &ndash; that way upstream merging should be easier.</p>
+
+<!--more-->
+
+
+<h3>Demo</h3>
+
+<p><a href="http://plnkr.co/edit/8d16J15gKhE2IKCATspZ?p=preview">Here</a> is a working demo of the plugin with resources.</p>
+
+<h3>Code</h3>
+
+<p>The source code of it is <a href="https://github.com/seankenny/fullcalendar">here</a>.</p>
+
+<h3>Usage</h3>
+
+<p>The only difference to the consumer of the plugin is that there is a new option (&lsquo;resources&rsquo;) and there is a new property on the <code>eventObject</code> named <code>resourceId</code> that we use to tie back to the relevant resource.</p>
+
+<p>```javascript
+$(&lsquo;#calendar&rsquo;).fullCalendar({
+  defaultView: &lsquo;resourceDay&rsquo;,
+  resources: [{&lsquo;id&rsquo;:&lsquo;r1&rsquo;,&lsquo;name&rsquo;:&lsquo;Resource 1&rsquo;},{&lsquo;id&rsquo;:&lsquo;r2&rsquo;, &lsquo;name&rsquo;:&lsquo;Resource 2&rsquo;}],
+  //resources: &lsquo;data-url&rsquo;  //you can use just a url to your resources data if you want
+  events: [
+  {</p>
+
+<pre><code>title: 'R1-R2: Lunch 14.00-15.00',
+start: '2013-08-21T14:00:00.000Z',
+end: '2013-08-21T15:00:00.000Z',
+resources: ['r1','r2']
+</code></pre>
+
+<p>  }
+});
+```</p>
+
+<p>The <code>event.resources</code> property can take any of the following formats:</p>
+
+<p><code>javascript
+events: [
+{
+  resources: 'r1'  // to assign this event to the r1 resource
+}
+// OR
+events: [
+{
+  resources: ['r1']  // to assign this event to the r1 resource
+}
+// OR
+events: [
+{
+  resources: ['r1','r2']  // to assign this event to the r1 &amp; r2 resources
+}
+</code></p>
+
+<p>The resources option on the calendar object also accepts a <code>className</code> to allow the styling of the individual resource columns:</p>
+
+<p><code>javascript
+$('#calendar').fullCalendar({
+  resources: [{'id':'r1', 'name':'Resource 1', 'className' : ['my-class-name']}]
+</code></p>
+
+<p>Enjoy!</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Html5 | Sean Kenny]]></title>
+  <link href="http://seankenny.github.io/blog/categories/html5/atom.xml" rel="self"/>
+  <link href="http://seankenny.github.io/"/>
+  <updated>2014-07-22T19:17:39+01:00</updated>
+  <id>http://seankenny.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJs in HTML5 Mode With Express]]></title>
+    <link href="http://seankenny.github.io/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs/"/>
+    <updated>2013-08-05T18:49:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs</id>
+    <content type="html"><![CDATA[<p>By default, the routing in angular utilises the hash character in the URI path.  For example <code>http://myapp/#/customers/5</code>. By setting the $locationProvider to html5Mode, we can get to <code>http://myapp/customers/5</code> which is a lot nicer.</p>
+
+<p>```javascript
+angular.module(&lsquo;myApp&rsquo;, []).
+  config([&lsquo;$routeProvider&rsquo;, &lsquo;$locationProvider&rsquo;, function($routeProvider, $locationProvider) {
+  $routeProvider.</p>
+
+<pre><code>  when('/customers/:customerId', {templateUrl: 'partials/customer.html', controller: CustomerCtrl}).
+  otherwise({redirectTo: '/'});
+</code></pre>
+
+<p>  $locationProvider.html5Mode(true);</p>
+
+<p>}]);
+```</p>
+
+<!--more-->
+
+
+<p>However, when the page is refreshed, the browser has no way of knowing it should hit <code>http://myapp/</code> and then defer control to angular&rsquo;s routing.  Instead, it will do a <code>GET</code> request to the <code>http://myapp/customers/5</code> endpoint.  Which of course, does not exist.</p>
+
+<p>To allow for this, we need to have a catch-all route in our web server, <a href="http://expressjs.com/">Express</a> for this example.</p>
+
+<p>```javascript
+var app = require(&lsquo;express&rsquo;)();</p>
+
+<p>app.configure(function(){
+  // static &ndash; all our js, css, images, etc go into the assets path
+  app.use(&lsquo;/assets&rsquo;, express.static(&lsquo;/assets&rsquo;));
+  //If we get here then the request for a static file is invalid so we may as well stop here
+  app.use(&lsquo;/assets&rsquo;, function(req, res, next) {</p>
+
+<pre><code>res.send(404); 
+</code></pre>
+
+<p>  });</p>
+
+<p>  app.get(&lsquo;/customers/:id&rsquo;, function(req, res){</p>
+
+<pre><code>// return data for customer....
+</code></pre>
+
+<p>  });</p>
+
+<p>  // This route deals enables HTML5Mode by forwarding missing files to the index.html
+  app.all(&lsquo;/*&rsquo;, function(req, res) {</p>
+
+<pre><code>res.sendfile('index.html');
+</code></pre>
+
+<p>  });
+});</p>
+
+<p>app.listen(9000);
+```</p>
+]]></content>
+  </entry>
+  
+</feed>

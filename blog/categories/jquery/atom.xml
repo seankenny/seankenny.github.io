@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Jquery | Sean Kenny]]></title>
+  <link href="http://seankenny.github.io/blog/categories/jquery/atom.xml" rel="self"/>
+  <link href="http://seankenny.github.io/"/>
+  <updated>2014-07-22T19:17:39+01:00</updated>
+  <id>http://seankenny.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Infinite Scrolling With JQuery]]></title>
+    <link href="http://seankenny.github.io/blog/2012/05/11/infinite-scrolling-with-jquery/"/>
+    <updated>2012-05-11T18:52:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2012/05/11/infinite-scrolling-with-jquery</id>
+    <content type="html"><![CDATA[<p>Recently I was asked to include an infinite scroll for a client’s twitter account on their homepage.  I was surprised at how easy it turns out to be.</p>
+
+<p>In a nutshell, it consists of:</p>
+
+<p>Use AJAX to hit Twitter’s timeline API to get the tweets</p>
+
+<!--more-->
+
+
+<p>Use JQuery to detect when the user is scrolling</p>
+
+<p>Use a little bit of maths to figure out when to trigger another page of tweets</p>
+
+<p>First, we add a link to grab JQuery from the Google CDN.</p>
+
+<p>Next, add in placeholders for the tweets</p>
+
+<p><code>html
+&lt;body&gt;
+  &lt;ul id='tweets'&gt;&lt;/ul&gt;
+&lt;/body&gt;
+</code></p>
+
+<p>Now the call to get the tweets from Twitter and add them as items to our list (I’m using Stephen Fry as the test subject as he tweets LOADS):</p>
+
+<p>```javascript
+$.ajax({
+  dataType: &ldquo;json&rdquo;,
+  url: &lsquo;<a href="http://api.twitter.com/1/statuses/user_timeline.json">http://api.twitter.com/1/statuses/user_timeline.json</a>&rsquo;,
+  data: {</p>
+
+<pre><code>id: 'stephenfry'
+skip_user: true,
+page: pageNumber
+</code></pre>
+
+<p>  },
+  success: function(response){</p>
+
+<pre><code>for(var i=0;i&amp;lt;response.length; i++){
+  $('#tweets').append('&lt;li&gt;' + response[i].text + '&lt;/li&gt;');
+}
+</code></pre>
+
+<p>});
+```</p>
+
+<p>Note that we are passing in the page number.  This is important for the next few bits.</p>
+
+<p>Now we add the JQuery to load the page on opening.</p>
+
+<p><code>javascript
+$(function(){
+  getPagedTweets(1);
+});
+</code></p>
+
+<p>For the infinite scroll, we need to do a few things.  First, we need to be able to pass the next page to Twitter’s API so we need a mechanism to store it.  We can use a HTML5 data item to do this:</p>
+
+<p>```html</p>
+
+<ul id="tweets" data-nextpage="2"></ul>
+
+
+<p>```</p>
+
+<p>Next, we need a nextPage function to get and set this value as well as call the getPagedTweets function we already have:</p>
+
+<p><code>javascript
+function nextPage(){
+  var pageNumber = parseInt($('#tweets').attr('data-nextpage'));
+  getPagedTweets(pageNumber);
+  $('#tweets').attr('data-nextpage', pageNumber + 1);
+};
+</code></p>
+
+<p>Finally, we need the JQuery to trigger an event when the user scrolls to the bottom of the page:</p>
+
+<p>```javascript
+$(function(){
+  getPagedTweets(1);
+  $(window).scroll(function(){</p>
+
+<pre><code>if($(window).scrollTop() &amp;gt;= $(document).height() - $(window).height()){
+  nextPage();
+};
+</code></pre>
+
+<p>  });
+});
+```</p>
+
+<p>And that should be that.</p>
+
+<p>Note the page should be resized to ensure that scrollbars are visible otherwise this will not work as the user needs to scroll in order for the next page call to work.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JQuery Binding With the Future in Mind]]></title>
+    <link href="http://seankenny.github.io/blog/2011/10/11/jquery-binding-with-the-future-in-mind/"/>
+    <updated>2011-10-11T18:53:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2011/10/11/jquery-binding-with-the-future-in-mind</id>
+    <content type="html"><![CDATA[<p>This was something that confused me for a while when I started JQuery – binding.  You add a new html element and want to bind to a click event for example on that element. Sounds straightforward.</p>
+
+<p>We have 2 divs, the first being static and the second being a placeholder that we will dynamically add more html elements to.</p>
+
+<!--more-->
+
+
+<p>```html</p>
+
+<div id='ClickMe'>Click on me!</div>
+
+
+<div id='placeholder'></div>
+
+
+<p>```</p>
+
+<p>We add our elements using JQuery like this</p>
+
+<p>```javascript
+$(function(){</p>
+
+<pre><code>var newItems = '&lt;div id="ClickMeToo"&gt;Click on me as well!&lt;/div&gt;';  
+$('#placeholder').html(newItems);  
+</code></pre>
+
+<p>});
+```</p>
+
+<p>When we browse to the page, as expected, we get the 2 divs.</p>
+
+<p>Now we can add the click events:</p>
+
+<p>```javascript
+$(function(){<br/>
+  var newItems = &lsquo;<div id="ClickMeToo">Click on me as well!</div></p>
+
+<p>  $(&lsquo;#placeholder&rsquo;).html(newItems);<br/>
+  $(&lsquo;#ClickMe&rsquo;).click(function () {</p>
+
+<pre><code>alert('I always work');  
+</code></pre>
+
+<p>  });</p>
+
+<p>  $(&lsquo;#ClickMeToo&rsquo;).click(function () {</p>
+
+<pre><code>alert('I don't work...');  
+</code></pre>
+
+<p>  });<br/>
+});
+```</p>
+
+<p>But the second click event does not work.  Why?  Well the answer is that the <code>ClickMeToo</code> element does not exist when the JQuery does it’s binding and the new div we added is left out in the cold.</p>
+
+<p>To resolve this, all we need to do is to amend the code $(‘#ClickMeToo’).click(function () { to the following:</p>
+
+<p><code>javascript
+$('#ClickMeToo').live('click', function () {  
+  alert("I'm gonna work now!");  
+});
+</code></p>
+
+<p>The <code>live</code> method tells JQuery to bind for all existing and future matches to the selector.</p>
+
+<p>EDIT: the <code>live</code> binding is now deprecated &ndash; use <code>on</code> instead!</p>
+]]></content>
+  </entry>
+  
+</feed>

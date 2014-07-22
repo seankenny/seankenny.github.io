@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Angularjs | Sean Kenny]]></title>
+  <link href="http://seankenny.github.io/blog/categories/angularjs/atom.xml" rel="self"/>
+  <link href="http://seankenny.github.io/"/>
+  <updated>2014-07-22T19:17:39+01:00</updated>
+  <id>http://seankenny.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Angular Modules - Module Not Found]]></title>
+    <link href="http://seankenny.github.io/blog/2014/06/27/angular-modules-module-not-found/"/>
+    <updated>2014-06-27T19:42:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2014/06/27/angular-modules-module-not-found</id>
+    <content type="html"><![CDATA[<p>This little one caught me out for an hour or two.  Moving away from the global &lsquo;app&rsquo; variable in angularJs, I started using the angular.module syntax:</p>
+
+<p><code>javascript
+angular.module('UserHandler', [])
+</code></p>
+
+<!--more-->
+
+
+<p>The app.js starts things using an IIFE <a href="http://benalman.com/news/2010/11/immediately-invoked-function-expression/">(Immediately Invoked Function Expression)</a>:</p>
+
+<p>```javascript
+(function() {
+  &lsquo;use strict&rsquo;;</p>
+
+<p>  var app = angular.module(&lsquo;bootstrapper&rsquo;, [&lsquo;ngRoute&rsquo;]);</p>
+
+<p>  // do other config things with the app like routing, etc.
+)();
+```</p>
+
+<p> Then onto my controllers:</p>
+
+<p>```javascript
+(function(app) {
+  &lsquo;use strict&rsquo;;</p>
+
+<p>  app.controller(&lsquo;registrationController&rsquo;, [</p>
+
+<pre><code>'$scope', function($scope) {
+// registration stuff
+}
+</code></pre>
+
+<p>  ]);
+})(angular.module(&lsquo;bootstrapper&rsquo;, []));  // this is bad
+```</p>
+
+<p>```javascript
+(function(app) {
+  &lsquo;use strict&rsquo;;</p>
+
+<p>  app.controller(&lsquo;signinController&rsquo;, [</p>
+
+<pre><code>'$scope', function($scope) {
+// sign in stuff
+}
+</code></pre>
+
+<p>  ]);
+})(angular.module(&lsquo;bootstrapper&rsquo;, []));  // this is bad
+```</p>
+
+<p> When I run this, the <code>registrationController</code> is never found.  Moving it to be declared after the <code>signinController</code> leads to the <code>signinController</code> never being found.  Huh?</p>
+
+<p>The secret is in the array on the <code>angular.module()</code> call.  Adding the array tells angular that you want a new angular module which dumps the initial one that you just created for the first controller.</p>
+
+<p> The correct way to create the controllers using this form of controller set up is:</p>
+
+<p>```javascript
+(function(app) {
+  &lsquo;use strict&rsquo;;</p>
+
+<p>  app.controller(&lsquo;registrationController&rsquo;, [</p>
+
+<pre><code>'$scope', function($scope) {
+// registration stuff
+}
+</code></pre>
+
+<p>  ]);
+})(angular.module(&lsquo;bootstrapper&rsquo;));
+```</p>
+
+<p>```javascript
+(function(app) {
+  &lsquo;use strict&rsquo;;</p>
+
+<p>  app.controller(&lsquo;signinController&rsquo;, [</p>
+
+<pre><code>'$scope', function($scope) {
+// sign in stuff
+}
+</code></pre>
+
+<p>  ]);
+})(angular.module(&lsquo;bootstrapper&rsquo;));
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS XSRF in .Net Land - SlidingExpiration]]></title>
+    <link href="http://seankenny.github.io/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/"/>
+    <updated>2014-01-22T19:52:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration</id>
+    <content type="html"><![CDATA[<p>So we have <a href="http://seankenny.me/blog/2014/01/20/angularjs-xsrf-in-net-land/">XSRF built into our app</a> and all is well.  Now we set the slidingExpiration=&ldquo;true&rdquo; in our web.config file:
+<code>xml
+&lt;authentication mode="Forms"&gt;
+  &lt;forms loginUrl="~/Account/Login" timeout="2880" slidingExpiration="true" /&gt;
+&lt;/authentication&gt;
+</code></p>
+
+<!--more-->
+
+
+<p>This will automatically update the authentication cookie once the cookie is nearing it&rsquo;s expiry time.  That way, if a user is on the site continuously then they will not need to re-authenticate.  This is a security flaw but real world requirements sometimes mean we need to be flexible.</p>
+
+<p>When ASP.Net detects the authentication cookie needs to be refreshed, it creates a new authentication cookie with a new value.  Now when we check the X-XSRF-TOKEN request header value sent to us by angular as part of a POST request, the values will not match up.  The user will start getting 401 exceptions after a time.</p>
+
+<p>To get around this, we will need to implement the sliding exipiration functionality ourselves.</p>
+
+<p>Remove the web.config <code>slidingExpiration="true"</code> attribute.</p>
+
+<p>In the global.asax:</p>
+
+<p>```c#
+protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
+{</p>
+
+<pre><code>var authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+SlidingExpirationCookie(authCookie);
+</code></pre>
+
+<p>}
+private void SlidingExpirationCookie(HttpCookie authCookie)
+{</p>
+
+<pre><code>if (authCookie == null)
+{
+    return;
+}
+
+var ticket = FormsAuthentication.Decrypt(authCookie.Value);
+var newTicket = FormsAuthentication.RenewTicketIfOld(ticket);
+if (newTicket == null || newTicket.Expiration == ticket.Expiration)
+{
+    return;
+}
+
+var encryptedTicket = FormsAuthentication.Encrypt(newTicket);
+authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+{
+    Secure = FormsAuthentication.RequireSSL,
+    Path = FormsAuthentication.FormsCookiePath,
+    Domain = FormsAuthentication.CookieDomain,
+    HttpOnly = true
+};
+
+if (ticket.IsPersistent)
+{
+    authCookie.Expires = ticket.Expiration;
+}
+
+Response.Cookies.Add(authCookie);
+
+var csrfToken = new CsrfTokenHelper().GenerateCsrfTokenFromAuthToken(authCookie.Value);
+var csrfCookie = new HttpCookie("FORM-XSRF", csrfToken) // remember, we don't use the default XSRF-TOKEN cookie name
+{
+    HttpOnly = false,
+    Secure = authCookie.Secure,
+    Path = authCookie.Path,
+    Domain = authCookie.Domain
+};
+
+HttpContext.Current.Response.Cookies.Add(csrfCookie);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Now the authentication cooke and the XSRF cookie will stay in sync.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS XSRF in .Net Land]]></title>
+    <link href="http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land/"/>
+    <updated>2014-01-20T18:31:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land</id>
+    <content type="html"><![CDATA[<p>Ah yes, <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">XSRF</a>.</p>
+
+<p>So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne'er-do-well.</p>
+
+<p>In ASP.Net MVC it&rsquo;s pretty straighforward.  In your Razor file, just add an <code>Html.AntiForgeryToken()</code> into the form in question and then, on the action, add a <code>[ValidateAntiForgeryToken]</code> filter and all is well.</p>
+
+<!--more-->
+
+
+<p>For angularjs and web api, things are different.  First off, we are using HTML files and not razor cshtml files so we cannot use the <code>Hml.AntiForgeryToken()</code> helper method.</p>
+
+<p>So this is the way I have done it using the FormsAuthentication cookie (kudos to this <a href="http://stackoverflow.com/questions/15574486/angular-against-asp-net-webapi-implement-csrf-on-the-server">SO</a> post.  Check it out &ndash; all you need is in there.  Remember to up-vote!).</p>
+
+<p>1)  Add a <code>XSRF-TOKEN</code> cookie.  The value of this cookie is obtained from the authorization cookie.
+AngularJs, by default, will search for this cookie when POSTing data back to the server.  When it finds it, it will add a <code>X-XSRF-TOKEN</code> header to the request.</p>
+
+<p>2) When we receive a POST request, we add a <code>[ValidateXSRFToken]</code> filter which will look for the <code>X-XSRF-TOKEN</code> request header then compare it to the authentication cookie value to see if there is a match.</p>
+
+<p>If there is no match, we return a <code>401 Unauthorized</code> response.</p>
+
+<p>Now for us, we cannot use a cookie names <code>XSRF-TOKEN</code> for reasons I won&rsquo;t go into.  So we can alter this in the server side code easily and then set the angularjs code to use this name rather than the default <code>XSRF-TOKEN</code> name.  we do this in the angular.module().config section of the code:</p>
+
+<p>```js
+angular.module(&lsquo;myApp&rsquo;, [])</p>
+
+<pre><code>.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.xsrfCookieName = 'FORM-XSRF';
+});
+</code></pre>
+
+<p>```</p>
+
+<p>Now angular will tie up nicely to the XSRF cookie change.</p>
+
+<p>If you need to change the POST request header from <code>X-XSRF-TOKEN</code> you can use:
+<code>js
+$httpProvider.defaults.xsrfHeaderName  = 'X-FORM-XSRF';
+</code></p>
+
+<p>Next, what happens when you <a href="http://seankenny.me/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/">introduce <code>slidingExpiration="true"</code> into the mix</a>?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CamelCaseJson]]></title>
+    <link href="http://seankenny.github.io/blog/2014/01/05/camelcasejson/"/>
+    <updated>2014-01-05T10:49:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2014/01/05/camelcasejson</id>
+    <content type="html"><![CDATA[<p>I prefer JSON camel cased.  The default setup in ASP.net Web Api using the Newtonsoft JsonSerializer is for Pascal Case.  To switch to camel case is easy and makes for a much more seamless angularJS and Web Api interaction.  In the WebAPiConfig class:</p>
+
+<p><code>c#
+var jsonFormatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS FormsAuthentication in .Net Land]]></title>
+    <link href="http://seankenny.github.io/blog/2013/10/02/angularjs-formsauthentication-in-net-land/"/>
+    <updated>2013-10-02T18:31:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/10/02/angularjs-formsauthentication-in-net-land</id>
+    <content type="html"><![CDATA[<p>There are a number of ways to authenticate an angularJS application.  This is the one I am currently using.  It uses a <code>FormsAuthentication</code> cookie in the same way as a regular ASP.Net WebForms/MVC app would.</p>
+
+<p>The structure is basically Web Api, a single MVC home controller with an Index.cshtml and angular.</p>
+
+<!--more-->
+
+
+<p>The HTML sign in form:
+```xml
+<form name="form" novalidate></p>
+
+<pre><code>&lt;input type="text" ng-model="user.userName" /&gt;
+&lt;input type="password" ng-model="user.password" /&gt;
+&lt;input type="submit" value="Sign In" data-ng-click="signin(user)"&gt;
+</code></pre>
+
+<p></form>
+```</p>
+
+<p>Clicking the &lsquo;Sign In&rsquo; calls the Angular Sign In function:</p>
+
+<p>```js
+$scope.signin = function(user) {</p>
+
+<pre><code>$http.post('api/accounts/signin', user)
+    .success(function(data, status, headers, config) {
+        user.authenticated = true;
+        $rootScope.user = user;
+        $location.path('/');
+    })
+    .error(function(data, status, headers, config) {
+        user.authenticated = false;
+        $rootScope.user = {};
+    });
+</code></pre>
+
+<p>};
+```</p>
+
+<p>Which calls the Web Api Accounts Controller
+```c#
+public class AccountsController : ApiController
+{</p>
+
+<pre><code>[HttpPost]
+public HttpResponseMessage SignIn(UserDataModel user)
+{
+    if (this.ModelState.IsValid)
+    {
+        // authenticate the user however you wish to do so here....
+        if (authenticated)
+        {
+            var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
+            FormsAuthentication.SetAuthCookie(user.UserName, false);
+            return response;
+        }
+        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden);
+    }
+    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
+}
+</code></pre>
+
+<p>}</p>
+
+<p>// USER DATAMODEL:
+public class UserDataModel
+{</p>
+
+<pre><code>public string UserName { get; set; }
+public string Password { get; set; }
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Which adds an encrypted cookie to the response.</p>
+
+<p>So now we have a <code>$rootScope.user</code> object that has an <code>authenticated</code> property set to true/false.  This allows us to hide/show menus, etc.  Obviously this can be tampered with so we secure things by locking down any server side code we want to:</p>
+
+<p>```c#
+[Authorize]
+public class AccountsController : ApiController
+{</p>
+
+<pre><code>[HttpPost]
+public HttpResponseMessage SomethingPrivate(UserDataModel user)
+{
+    // this will only be reached if the FromsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>The sign out is:
+```js
+$scope.signin = function(user) {</p>
+
+<pre><code>$http.post('api/accounts/signout').
+    success(function(data, status, headers, config) {
+        localStorageService.clearAll();
+        $rootScope.user = {};
+        $location.path('/');
+    });
+</code></pre>
+
+<p>};
+```</p>
+
+<p>Which calls the Web Api Accounts SignOut Controller Action
+```c#
+public class AccountsController : ApiController
+{</p>
+
+<pre><code>[HttpPost]
+public HttpResponseMessage SignOut(UserDataModel user)
+{
+    if (this.ModelState.IsValid)
+    {
+        var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
+        FormsAuthentication.SignOut();
+
+        return response;
+    }
+    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>This will remove the FormsAuthentication cookie from the user&rsquo;s browser.  The angularjs <code>$rootScope.user</code> will be reset and we are now logged out.</p>
+
+<p>The only other thing to be aware of is when the user refreshed the page, etc.  We need to authomatically &lsquo;sign in&rsquo; the user if the cookie is present.  This is done on our MVC Controller that supplies the Index.cshtml page.</p>
+
+<p>```c#
+public class HomeController : Controller
+{</p>
+
+<pre><code>[HttpPost]
+public ViewResult Index()
+{
+    var dataModel = new BootStrapperDataModel
+    {
+        Authenticated = Request.IsAuthenticated ? "true": "false",
+    };
+
+    if (Request.IsAuthenticated)
+    {
+        dataModel.UserName = Thread.CurrentPrincipal.Identity.Name;
+    }
+
+    return View(dataModel);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>And the update to the Index.cshtml to update the <code>$rootScope.user</code>:</p>
+
+<p>```html
+@model BootStrapperDataModel</p>
+
+<p><div ng-init="user={authenticated:'@Model.Authenticated',userName:'@Model.UserName'}"></p>
+
+<pre><code>&lt;div ng-controller="MyController"&gt;
+</code></pre>
+
+<p>```</p>
+
+<p>Check out the <a href="http://seankenny.me/blog/2013/10/02/preloading-angularjs-data-in-net-land/">post</a> on ng-init to see how to hook this up with angularjs in more detail.</p>
+]]></content>
+  </entry>
+  
+</feed>

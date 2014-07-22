@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS XSRF in .Net Land - Sean Kenny</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="Ah yes, XSRF. So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne&# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Raleway|Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-52395142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Kenny</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:seankenny.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/srkenny">@srkenny</a></li>
+  <li><a href="https://github.com/seankenny">Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">AngularJS XSRF in .Net Land</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-20T18:31:00+00:00" pubdate data-updated="true">20 Jan 2014</time>
+ • <a href="">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Ah yes, <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">XSRF</a>.</p>
+
+<p>So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne&#8217;er-do-well.</p>
+
+<p>In ASP.Net MVC it&rsquo;s pretty straighforward.  In your Razor file, just add an <code>Html.AntiForgeryToken()</code> into the form in question and then, on the action, add a <code>[ValidateAntiForgeryToken]</code> filter and all is well.</p>
+
+<!--more-->
+
+
+<p>For angularjs and web api, things are different.  First off, we are using HTML files and not razor cshtml files so we cannot use the <code>Hml.AntiForgeryToken()</code> helper method.</p>
+
+<p>So this is the way I have done it using the FormsAuthentication cookie (kudos to this <a href="http://stackoverflow.com/questions/15574486/angular-against-asp-net-webapi-implement-csrf-on-the-server">SO</a> post.  Check it out &ndash; all you need is in there.  Remember to up-vote!).</p>
+
+<p>1)  Add a <code>XSRF-TOKEN</code> cookie.  The value of this cookie is obtained from the authorization cookie.
+AngularJs, by default, will search for this cookie when POSTing data back to the server.  When it finds it, it will add a <code>X-XSRF-TOKEN</code> header to the request.</p>
+
+<p>2) When we receive a POST request, we add a <code>[ValidateXSRFToken]</code> filter which will look for the <code>X-XSRF-TOKEN</code> request header then compare it to the authentication cookie value to see if there is a match.</p>
+
+<p>If there is no match, we return a <code>401 Unauthorized</code> response.</p>
+
+<p>Now for us, we cannot use a cookie names <code>XSRF-TOKEN</code> for reasons I won&rsquo;t go into.  So we can alter this in the server side code easily and then set the angularjs code to use this name rather than the default <code>XSRF-TOKEN</code> name.  we do this in the angular.module().config section of the code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$httpProvider&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$httpProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">xsrfCookieName</span> <span class="o">=</span> <span class="s1">&#39;FORM-XSRF&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now angular will tie up nicely to the XSRF cookie change.</p>
+
+<p>If you need to change the POST request header from <code>X-XSRF-TOKEN</code> you can use:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">xsrfHeaderName</span>  <span class="o">=</span> <span class="s1">&#39;X-FORM-XSRF&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, what happens when you <a href="http://seankenny.me/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/">introduce <code>slidingExpiration="true"</code> into the mix</a>?</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-20T18:31:00+00:00" pubdate data-updated="true">20 Jan 2014</time>
+ • <a href="">permalink</a>
+  
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dot-net/'>.net</a>, <a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/authentication/'>authentication</a>, <a class='category' href='/blog/categories/web-api/'>web api</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/05/camelcasejson/" title="Previous Post: CamelCaseJson">&laquo; CamelCaseJson</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/" title="Next Post: AngularJS XSRF in .Net land - SlidingExpiration">AngularJS XSRF in .Net land - SlidingExpiration &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sean Kenny -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'seankenny';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land/';
+        var disqus_url = 'http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
