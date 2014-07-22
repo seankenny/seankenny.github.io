@@ -1,0 +1,78 @@
+// This File is imported last, and will override other styles in the cascade
+// Add styles here to make changes without digging in too much
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-weight: 500;
+line-height: 1.1;
+color: inherit;
+}
+
+body {
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-size: 14px;
+line-height: 1.428571429;
+color: #333333;
+
+}
+body>header {
+text-align: center;
+font-family: League, Georgia,Times,serif !important;
+}
+
+body > div > div { border-right-width: 0px;}
+
+article header p.meta {
+top: inherit;
+}
+
+
+
+article h1 {
+font-size: 1.8em;
+font-family: 'Raleway', serif;
+font-weight: normal;
+}
+
+.entry-content {
+font-size: 1.1em;
+font-family: 'Open Sans',Helvetica,Arial,sans-serif;
+line-height: 26px;
+margin: 40px 0 0 0;
+}
+
+body>nav {
+  border-top-color: #bfbfbf;
+  border-top-style: dotted;
+  border-bottom-style: dotted;
+  padding-top: 15px;
+padding-bottom: 15px;
+}
+
+body>nav ul {
+padding-top: 1em;
+padding-bottom: 1em;
+}
+
+body>nav form .search {
+
+line-height: 3em;
+}
+
+body>nav>li {
+  color: #777777;
+}
+
+body>nav li+li {
+border-left: none;
+}
+
+#content .blog-index a[rel=full-article] {
+color: #ffffff;
+background-color: #428bca;
+border-color: #357ebd;
+}
+
+#content .blog-index a[rel=full-article]:hover {
+background-color: #3276b1;
+border-color: #285e8e;
+}
