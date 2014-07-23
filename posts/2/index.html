@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Sean Kenny</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://seankenny.github.io/posts/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Raleway|Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-52395142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Kenny</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:seankenny.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/srkenny">@srkenny</a></li>
+  <li><a href="https://github.com/seankenny">Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/">404 With Relative Paths and the Web Optimization Framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-04T18:54:00+01:00" pubdate data-updated="true">04 Sep 2013</time>
+ • <a href="/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for our web pages to load.  In .Net land, we might use the <a href="http://www.nuget.org/packages/microsoft.aspnet.web.optimization/">Microsoft ASP.NET Web Optimization Framework</a> to do this.</p>
+
+<p>There is sometimes an issue where a css file has a relative path reference to an image.  An example of this is in twitter bootstrap.  See that url?  That&rsquo;s a problem for us.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">FullCalendar - With a Resource Day View!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-14T19:29:00+01:00" pubdate data-updated="true">14 Aug 2013</time>
+ • <a href="/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://arshaw.com/fullcalendar/">FullCalendar</a> is a JavaScript calendar JQuery plug-in.  I&rsquo;ve used it now on 2 projects and it&rsquo;s just great.</p>
+
+<p>So on another project, we needed to be able to see the calendar agenda day view with it split into vertical columns for each &lsquo;resource&rsquo;.  There are a few forks that are doing this with FullCalendar but they aren&rsquo;t really suitable for us.  One has resource rows rather than columns and the other is a fork of an old version of the FullCalendar code.</p>
+
+<p>So I went ahead and forked the source on github.  The goal was to keep the forked version as similar to the core as possible &ndash; that way upstream merging should be easier.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs/">AngularJs in HTML5 Mode With Express</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-05T18:49:00+01:00" pubdate data-updated="true">05 Aug 2013</time>
+ • <a href="/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>By default, the routing in angular utilises the hash character in the URI path.  For example <code>http://myapp/#/customers/5</code>. By setting the $locationProvider to html5Mode, we can get to <code>http://myapp/customers/5</code> which is a lot nicer.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]).</span>
+</span><span class='line'>  <span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="s1">&#39;$locationProvider&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">,</span> <span class="nx">$locationProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$routeProvider</span><span class="p">.</span>
+</span><span class='line'>      <span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/customers/:customerId&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;partials/customer.html&#39;</span><span class="p">,</span> <span class="nx">controller</span><span class="o">:</span> <span class="nx">CustomerCtrl</span><span class="p">}).</span>
+</span><span class='line'>      <span class="nx">otherwise</span><span class="p">({</span><span class="nx">redirectTo</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$locationProvider</span><span class="p">.</span><span class="nx">html5Mode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/04/npm-err-registry-error-parsing-json/">NPM - ERR! Registry Error Parsing Json</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-04T14:44:00+01:00" pubdate data-updated="true">04 Aug 2013</time>
+ • <a href="/blog/2013/08/04/npm-err-registry-error-parsing-json/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I upgraded to node 0.10.15 and just ran npm install on a project I am working on.  I started seeing a lot of these failures:</p>
+
+<pre><code>npm - ERR! registry error parsing json
+npm - ERR! SyntaxError: Unexpected token &lt;
+</code></pre>
+
+<p>I had already run the npm install command maybe 30 minutes previously so I thought it might be something to do with the node/npm versions so I did the usual and rolled back.  Same issue.  Ok so maybe a corrupt module or something?  <code>npm cache clean</code> was next.  Still no change.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/04/npm-err-registry-error-parsing-json/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/">Unit Testing ASP.Net MVC JSONResults</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T17:40:00+01:00" pubdate data-updated="true">02 May 2013</time>
+ • <a href="/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Let&rsquo;s say we have a controller action that returns a <code>JsonResult</code> with an anonymous type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">JsonResult</span> <span class="nf">Customer</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">,</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nf">Json</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span> <span class="n">JsonRequestBehavior</span><span class="p">.</span><span class="n">AllowGet</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">Entity Framework Migrations - No Logical Space Left to Create More User Strings</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-15T18:41:00+01:00" pubdate data-updated="true">15 Jul 2012</time>
+ • <a href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yesterday we started seeing a compile time exception:</p>
+
+<pre><code>Unexpected error writing metadata to file 'e:\….\obj\Release\…Repository.EntityFramework.dll'
+-- 'No logical space left to create more user strings'
+</code></pre>
+
+<p>As it turns out, this related to us having too many migration scripts, in our case, > 90.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/11/infinite-scrolling-with-jquery/">Infinite Scrolling With JQuery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-11T18:52:00+01:00" pubdate data-updated="true">11 May 2012</time>
+ • <a href="/blog/2012/05/11/infinite-scrolling-with-jquery/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I was asked to include an infinite scroll for a client’s twitter account on their homepage.  I was surprised at how easy it turns out to be.</p>
+
+<p>In a nutshell, it consists of:</p>
+
+<p>Use AJAX to hit Twitter’s timeline API to get the tweets</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/05/11/infinite-scrolling-with-jquery/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/11/something-i-learned-today-declaritive-authorization/">Something I Learned Today – Declaritive Authorization</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-11T18:53:00+00:00" pubdate data-updated="true">11 Jan 2012</time>
+ • <a href="/blog/2012/01/11/something-i-learned-today-declaritive-authorization/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well not exactly true.  We’ve been using this great gem for a while now on our first venture into Ruby on Rails.</p>
+
+<p>Ryan Bates over at RailsCasts has a great session on the topic.  We implemented the basic vanilla version on our RESTful controller actions and models and everything seemed to run fine after making a few tweaks.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/11/something-i-learned-today-declaritive-authorization/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/11/jquery-binding-with-the-future-in-mind/">JQuery Binding With the Future in Mind</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-11T18:53:00+01:00" pubdate data-updated="true">11 Oct 2011</time>
+ • <a href="/blog/2011/10/11/jquery-binding-with-the-future-in-mind/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This was something that confused me for a while when I started JQuery – binding.  You add a new html element and want to bind to a click event for example on that element. Sounds straightforward.</p>
+
+<p>We have 2 divs, the first being static and the second being a placeholder that we will dynamically add more html elements to.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/10/11/jquery-binding-with-the-future-in-mind/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/index.html">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sean Kenny -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'seankenny';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

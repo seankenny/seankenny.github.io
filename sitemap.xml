@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number/</loc>
+    <lastmod>2014-06-28T12:10:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/06/27/angular-modules-module-not-found/</loc>
+    <lastmod>2014-06-27T19:42:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix/</loc>
+    <lastmod>2014-06-10T20:11:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/06/04/web-api-with-dot-in-the-route/</loc>
+    <lastmod>2014-06-04T17:58:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/</loc>
+    <lastmod>2014-01-22T19:52:00+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land/</loc>
+    <lastmod>2014-01-20T18:31:00+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2014/01/05/camelcasejson/</loc>
+    <lastmod>2014-01-05T10:49:00+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/10/02/angularjs-formsauthentication-in-net-land/</loc>
+    <lastmod>2013-10-02T18:31:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/09/29/preloading-angularjs-data-in-net-land/</loc>
+    <lastmod>2013-09-29T17:17:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/</loc>
+    <lastmod>2013-09-19T17:50:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/</loc>
+    <lastmod>2013-09-04T18:54:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/08/14/fullcalendar-with-a-resource-day-view/</loc>
+    <lastmod>2013-08-14T19:29:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs/</loc>
+    <lastmod>2013-08-05T18:49:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/08/04/npm-err-registry-error-parsing-json/</loc>
+    <lastmod>2013-08-04T14:44:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/</loc>
+    <lastmod>2013-05-02T17:40:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/</loc>
+    <lastmod>2012-07-15T18:41:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2012/05/11/infinite-scrolling-with-jquery/</loc>
+    <lastmod>2012-05-11T18:52:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2012/01/11/something-i-learned-today-declaritive-authorization/</loc>
+    <lastmod>2012-01-11T18:53:00+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/2011/10/11/jquery-binding-with-the-future-in-mind/</loc>
+    <lastmod>2011-10-11T18:53:00+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  
+  <url>
+    <loc>http://seankenny.github.io/blog/archives/</loc>
+    <lastmod>2014-07-22T19:22:00+01:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://seankenny.github.io/</loc>
+    <lastmod>2014-07-22T19:22:00+01:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  
+</urlset>

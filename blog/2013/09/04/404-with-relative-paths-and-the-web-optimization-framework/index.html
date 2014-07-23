@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>404 With Relative Paths and the Web Optimization Framework - Sean Kenny</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://seankenny.github.io/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Raleway|Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-52395142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Kenny</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:seankenny.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/srkenny">@srkenny</a></li>
+  <li><a href="https://github.com/seankenny">Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">404 With Relative Paths and the Web Optimization Framework</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-04T18:54:00+01:00" pubdate data-updated="true">04 Sep 2013</time>
+ • <a href="">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for our web pages to load.  In .Net land, we might use the <a href="http://www.nuget.org/packages/microsoft.aspnet.web.optimization/">Microsoft ASP.NET Web Optimization Framework</a> to do this.</p>
+
+<p>There is sometimes an issue where a css file has a relative path reference to an image.  An example of this is in twitter bootstrap.  See that url?  That&rsquo;s a problem for us.</p>
+
+<!--more-->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;icon-&quot;</span><span class="o">],</span>
+</span><span class='line'><span class="o">[</span><span class="nt">class</span><span class="o">*=</span><span class="s2">&quot; icon-&quot;</span><span class="o">]</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">display</span><span class="o">:</span> <span class="k">inline</span><span class="o">-</span><span class="k">block</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">width</span><span class="o">:</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">height</span><span class="o">:</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">margin-top</span><span class="o">:</span> <span class="m">1px</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">*</span><span class="k">margin-right</span><span class="o">:</span> <span class="m">.3em</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">line-height</span><span class="o">:</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">vertical-align</span><span class="o">:</span> <span class="k">text</span><span class="o">-</span><span class="k">top</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background-image</span><span class="o">:</span> <span class="sx">url(&quot;../img/glyphicons-halflings.png&quot;)</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background-position</span><span class="o">:</span> <span class="m">14px</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background-repeat</span><span class="o">:</span> <span class="k">no-repeat</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We would create a bundle:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">bundles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StyleBundle</span><span class="p">(</span><span class="s">&quot;~/styles/css&quot;</span><span class="p">).</span><span class="n">Include</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap.css&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap-responsive.css&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/site.css&quot;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we minify this and all our site specific stylesheets into a bundle and then render the HTML, we&rsquo;ll get a <code>404 HTTP NOT FOUND</code> exception that we can see in the chrome developer tools (under the <code>network</code> tab).  The bundle will be generated as &lsquo;styles/css/&rsquo; and the url will check for the image in <code>styles/css/../img/glyphicons-halflings.png</code>.</p>
+
+<p>Luckily there is an option in the optimization framework called <code>CssRewriteUrlTransform()</code> to handle this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">bundles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StyleBundle</span><span class="p">(</span><span class="s">&quot;~/styles/app&quot;</span><span class="p">).</span><span class="n">Include</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap.css&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">CssRewriteUrlTransform</span><span class="p">()).</span><span class="n">Include</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap-responsive.css&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/site.css&quot;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>No more 404.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-04T18:54:00+01:00" pubdate data-updated="true">04 Sep 2013</time>
+ • <a href="">permalink</a>
+  
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/asp-dot-net/'>asp.net</a>, <a class='category' href='/blog/categories/css/'>css</a>, <a class='category' href='/blog/categories/minification/'>minification</a>, <a class='category' href='/blog/categories/mvc/'>mvc</a>, <a class='category' href='/blog/categories/web-optimization-framework/'>web optimization framework</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/08/14/fullcalendar-with-a-resource-day-view/" title="Previous Post: FullCalendar - with a resource day view!">&laquo; FullCalendar - with a resource day view!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/" title="Next Post: Web Api, Entity Framework and ISO 8601 date formats">Web Api, Entity Framework and ISO 8601 date formats &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Sean Kenny -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'seankenny';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://seankenny.github.io/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/';
+        var disqus_url = 'http://seankenny.github.io/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

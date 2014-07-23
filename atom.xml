@@ -1,0 +1,1911 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Sean Kenny]]></title>
+  <link href="http://seankenny.github.io/atom.xml" rel="self"/>
+  <link href="http://seankenny.github.io/"/>
+  <updated>2014-07-22T19:22:00+01:00</updated>
+  <id>http://seankenny.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Pretty Printing Xml or Json in HTML With C#]]></title>
+    <link href="http://seankenny.github.io/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number/"/>
+    <updated>2014-06-28T12:10:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number</id>
+    <content type="html"><![CDATA[<p>There are a few different ways to pretty print objects as html in C#.  We have a requirement to pretty print what might be XML or Json.  The following extension method does the trick:
+ <!--more--></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">PrettyPrint</span><span class="p">(</span><span class="k">this</span> <span class="kt">string</span> <span class="n">serialisedInput</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">input</span><span class="p">))</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">input</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">XDocument</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">input</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">t</span> <span class="p">=</span> <span class="n">JsonConvert</span><span class="p">.</span><span class="n">DeserializeObject</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;(</span><span class="n">input</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">JsonConvert</span><span class="p">.</span><span class="n">SerializeObject</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Formatting</span><span class="p">.</span><span class="n">Indented</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="n">input</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In our case, we will have previously serialised the object into a datastore:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="kt">var</span> <span class="n">serialisedItem</span> <span class="p">=</span> <span class="s">&quot;{\&quot;name\&quot;:\&quot;sean\&quot;,\&quot;roles\&quot;:[{\&quot;roleName\&quot;:\&quot;editor\&quot;},{\&quot;roleName\&quot;:\&quot;admin\&quot;}]}&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>or for those of us unfortunate to work in 1998:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="kt">var</span> <span class="n">serialisedItem</span> <span class="p">=</span> <span class="s">&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; ?&gt;&lt;Name&gt;sean&lt;/Name&gt;&lt;Roles&gt;&lt;RoleName&gt;editor&lt;/RoleName&gt;&lt;/Roles&gt;&lt;Roles&gt;&lt;RoleName&gt;admin&lt;/RoleName&gt;&lt;/Roles&gt;&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The Html/Razor syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;pre&gt;</span>@serialisedItem.PrettyPrint()<span class="nt">&lt;/pre&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Leads to (ta da!):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>{
+</span><span class='line'>    &quot;name&quot; : &quot;sean&quot;,
+</span><span class='line'>    &quot;roles&quot; : [{
+</span><span class='line'>          &quot;roleName&quot; : &quot;editor&quot;
+</span><span class='line'>        }, {
+</span><span class='line'>          &quot;roleName&quot; : &quot;admin&quot;
+</span><span class='line'>        }
+</span><span class='line'>    ]
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>or to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span>
+</span><span class='line'><span class="nt">&lt;Name&gt;</span>sean<span class="nt">&lt;/Name&gt;</span>
+</span><span class='line'><span class="nt">&lt;Roles&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;RoleName&gt;</span>editor<span class="nt">&lt;/RoleName&gt;</span>
+</span><span class='line'><span class="nt">&lt;/Roles&gt;</span>
+</span><span class='line'><span class="nt">&lt;Roles&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;RoleName&gt;</span>admin<span class="nt">&lt;/RoleName&gt;</span>
+</span><span class='line'><span class="nt">&lt;/Roles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Angular Modules - Module Not Found]]></title>
+    <link href="http://seankenny.github.io/blog/2014/06/27/angular-modules-module-not-found/"/>
+    <updated>2014-06-27T19:42:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2014/06/27/angular-modules-module-not-found</id>
+    <content type="html"><![CDATA[<p>This little one caught me out for an hour or two.  Moving away from the global &lsquo;app&rsquo; variable in angularJs, I started using the angular.module syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;UserHandler&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>The app.js starts things using an IIFE <a href="http://benalman.com/news/2010/11/immediately-invoked-function-expression/">(Immediately Invoked Function Expression)</a>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;bootstrapper&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ngRoute&#39;</span><span class="p">]);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// do other config things with the app like routing, etc.</span>
+</span><span class='line'><span class="p">)();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> Then onto my controllers:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;registrationController&#39;</span><span class="p">,</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// registration stuff</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">]);</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;bootstrapper&#39;</span><span class="p">,</span> <span class="p">[]));</span>  <span class="c1">// this is bad</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;signinController&#39;</span><span class="p">,</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// sign in stuff</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">]);</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;bootstrapper&#39;</span><span class="p">,</span> <span class="p">[]));</span>  <span class="c1">// this is bad</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> When I run this, the <code>registrationController</code> is never found.  Moving it to be declared after the <code>signinController</code> leads to the <code>signinController</code> never being found.  Huh?</p>
+
+<p>The secret is in the array on the <code>angular.module()</code> call.  Adding the array tells angular that you want a new angular module which dumps the initial one that you just created for the first controller.</p>
+
+<p> The correct way to create the controllers using this form of controller set up is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;registrationController&#39;</span><span class="p">,</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// registration stuff</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">]);</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;bootstrapper&#39;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;signinController&#39;</span><span class="p">,</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// sign in stuff</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">]);</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;bootstrapper&#39;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Deserialisation and Constructor Logic Don't Mix]]></title>
+    <link href="http://seankenny.github.io/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix/"/>
+    <updated>2014-06-10T20:11:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2014/06/10/deserialisation-and-constructor-logic-dont-mix</id>
+    <content type="html"><![CDATA[<p>I got caught on this one last week. I was load testing a web api resource using ApacheBench and was getting some really bad perf figures in the region of 40 req/sec when I would have expected an order of magnitude more at least.  The data model being sent as JSON was:</p>
+
+<!--more-->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">LogMessage</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">ulong</span> <span class="n">PhysicalMemory</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>        <span class="c1">// lots more properties</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="nf">LogMessage</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>                  <span class="kt">var</span> <span class="n">ci</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ComputerInfo</span><span class="p">();</span>
+</span><span class='line'>                  <span class="n">AvailablePhysicalMemory</span> <span class="p">=</span> <span class="n">ci</span><span class="p">.</span><span class="n">AvailablePhysicalMemory</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When deserialising the request body into the dataModel, the constructor gets called and we have the overhead of the <strong>slow</strong> <code>ComputerInfo().AvailablePhysicalMemory</code> call to get the available memory of the machine.  Multiply this in a load test scenario and there&rsquo;s the culprit.</p>
+
+<p>The fix is simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">LogMessage</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">ulong</span> <span class="n">AvailablePhysicalMemory</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">Init</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>                  <span class="kt">var</span> <span class="n">ci</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ComputerInfo</span><span class="p">();</span>
+</span><span class='line'>                  <span class="n">AvailablePhysicalMemory</span> <span class="p">=</span> <span class="n">ci</span><span class="p">.</span><span class="n">AvailablePhysicalMemory</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The client changes to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LogMessage</span><span class="p">().</span><span class="n">Init</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api With Dot in the Route]]></title>
+    <link href="http://seankenny.github.io/blog/2014/06/04/web-api-with-dot-in-the-route/"/>
+    <updated>2014-06-04T17:58:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2014/06/04/web-api-with-dot-in-the-route</id>
+    <content type="html"><![CDATA[<p>We have a requirement to have a dot midway in a route for one of our web api services.  The route looks something like <code>http://localhost/api/some.route/person</code>.  The controller (if using attribute based routing) is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[RoutePrefix(&quot;api/some.route&quot;)]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">UsersController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="na">  [Route(&quot;person&quot;)]</span>
+</span><span class='line'>  <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">Person</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// do stuff</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <!--more-->
+When you try to hit this resource using fiddler or postman, you&rsquo;ll get a 404 not found error.  There are plenty of StackOverflow posts out there about having dots in the route but these mainly are to do with a dot at the end of the route rather than midway so something like <code>http://localhost/api/someroute/per.son</code>.  IIS will identify the dot and assume you are after a static file with an extension of &lsquo;son&rsquo;.  To get around this, you can add this to your web.config file as explained by <a href="http://haacked.com/archive/2010/04/29/allowing-reserved-filenames-in-URLs.aspx">Phil Haack</a>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;system.web&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;httpRuntime</span> <span class="na">relaxedUrlToFileSystemMapping=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However this will not work where the dot is midway in the URL like I have.  For me, adding the following resolves the issue (although not having to have a dot in the route would be the obvious solution but sometimes your hands are tied).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;system.webServer&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;handlers&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;add</span> <span class="na">name=</span><span class="s">&quot;UrlRoutingHandler&quot;</span> <span class="na">type=</span><span class="s">&quot;System.Web.Routing.UrlRoutingHandler, System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&quot;</span> <span class="na">path=</span><span class="s">&quot;some.route/*&quot;</span> <span class="na">verb=</span><span class="s">&quot;*&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Adding this post as I <strong>KNOW</strong> I will forget this!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS XSRF in .Net Land - SlidingExpiration]]></title>
+    <link href="http://seankenny.github.io/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/"/>
+    <updated>2014-01-22T19:52:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration</id>
+    <content type="html"><![CDATA[<p>So we have <a href="http://seankenny.me/blog/2014/01/20/angularjs-xsrf-in-net-land/">XSRF built into our app</a> and all is well.  Now we set the slidingExpiration=&ldquo;true&rdquo; in our web.config file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;authentication</span> <span class="na">mode=</span><span class="s">&quot;Forms&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;forms</span> <span class="na">loginUrl=</span><span class="s">&quot;~/Account/Login&quot;</span> <span class="na">timeout=</span><span class="s">&quot;2880&quot;</span> <span class="na">slidingExpiration=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/authentication&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>This will automatically update the authentication cookie once the cookie is nearing it&rsquo;s expiry time.  That way, if a user is on the site continuously then they will not need to re-authenticate.  This is a security flaw but real world requirements sometimes mean we need to be flexible.</p>
+
+<p>When ASP.Net detects the authentication cookie needs to be refreshed, it creates a new authentication cookie with a new value.  Now when we check the X-XSRF-TOKEN request header value sent to us by angular as part of a POST request, the values will not match up.  The user will start getting 401 exceptions after a time.</p>
+
+<p>To get around this, we will need to implement the sliding exipiration functionality ourselves.</p>
+
+<p>Remove the web.config <code>slidingExpiration="true"</code> attribute.</p>
+
+<p>In the global.asax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">protected</span> <span class="k">void</span> <span class="nf">Application_PostAuthenticateRequest</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">authCookie</span> <span class="p">=</span> <span class="n">HttpContext</span><span class="p">.</span><span class="n">Current</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">Cookies</span><span class="p">[</span><span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">FormsCookieName</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">SlidingExpirationCookie</span><span class="p">(</span><span class="n">authCookie</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">private</span> <span class="k">void</span> <span class="nf">SlidingExpirationCookie</span><span class="p">(</span><span class="n">HttpCookie</span> <span class="n">authCookie</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">authCookie</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">ticket</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">Decrypt</span><span class="p">(</span><span class="n">authCookie</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">newTicket</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">RenewTicketIfOld</span><span class="p">(</span><span class="n">ticket</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">newTicket</span> <span class="p">==</span> <span class="k">null</span> <span class="p">||</span> <span class="n">newTicket</span><span class="p">.</span><span class="n">Expiration</span> <span class="p">==</span> <span class="n">ticket</span><span class="p">.</span><span class="n">Expiration</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">encryptedTicket</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">Encrypt</span><span class="p">(</span><span class="n">newTicket</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">authCookie</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpCookie</span><span class="p">(</span><span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">FormsCookieName</span><span class="p">,</span> <span class="n">encryptedTicket</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">Secure</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">RequireSSL</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">Path</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">FormsCookiePath</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">Domain</span> <span class="p">=</span> <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">CookieDomain</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">HttpOnly</span> <span class="p">=</span> <span class="k">true</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">ticket</span><span class="p">.</span><span class="n">IsPersistent</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">authCookie</span><span class="p">.</span><span class="n">Expires</span> <span class="p">=</span> <span class="n">ticket</span><span class="p">.</span><span class="n">Expiration</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Response</span><span class="p">.</span><span class="n">Cookies</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">authCookie</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">csrfToken</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CsrfTokenHelper</span><span class="p">().</span><span class="n">GenerateCsrfTokenFromAuthToken</span><span class="p">(</span><span class="n">authCookie</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">csrfCookie</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpCookie</span><span class="p">(</span><span class="s">&quot;FORM-XSRF&quot;</span><span class="p">,</span> <span class="n">csrfToken</span><span class="p">)</span> <span class="c1">// remember, we don&#39;t use the default XSRF-TOKEN cookie name</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">HttpOnly</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">Secure</span> <span class="p">=</span> <span class="n">authCookie</span><span class="p">.</span><span class="n">Secure</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">Path</span> <span class="p">=</span> <span class="n">authCookie</span><span class="p">.</span><span class="n">Path</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">Domain</span> <span class="p">=</span> <span class="n">authCookie</span><span class="p">.</span><span class="n">Domain</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">HttpContext</span><span class="p">.</span><span class="n">Current</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">Cookies</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">csrfCookie</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the authentication cooke and the XSRF cookie will stay in sync.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS XSRF in .Net Land]]></title>
+    <link href="http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land/"/>
+    <updated>2014-01-20T18:31:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2014/01/20/angularjs-xsrf-in-net-land</id>
+    <content type="html"><![CDATA[<p>Ah yes, <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">XSRF</a>.</p>
+
+<p>So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne&#8217;er-do-well.</p>
+
+<p>In ASP.Net MVC it&rsquo;s pretty straighforward.  In your Razor file, just add an <code>Html.AntiForgeryToken()</code> into the form in question and then, on the action, add a <code>[ValidateAntiForgeryToken]</code> filter and all is well.</p>
+
+<!--more-->
+
+
+<p>For angularjs and web api, things are different.  First off, we are using HTML files and not razor cshtml files so we cannot use the <code>Hml.AntiForgeryToken()</code> helper method.</p>
+
+<p>So this is the way I have done it using the FormsAuthentication cookie (kudos to this <a href="http://stackoverflow.com/questions/15574486/angular-against-asp-net-webapi-implement-csrf-on-the-server">SO</a> post.  Check it out &ndash; all you need is in there.  Remember to up-vote!).</p>
+
+<p>1)  Add a <code>XSRF-TOKEN</code> cookie.  The value of this cookie is obtained from the authorization cookie.
+AngularJs, by default, will search for this cookie when POSTing data back to the server.  When it finds it, it will add a <code>X-XSRF-TOKEN</code> header to the request.</p>
+
+<p>2) When we receive a POST request, we add a <code>[ValidateXSRFToken]</code> filter which will look for the <code>X-XSRF-TOKEN</code> request header then compare it to the authentication cookie value to see if there is a match.</p>
+
+<p>If there is no match, we return a <code>401 Unauthorized</code> response.</p>
+
+<p>Now for us, we cannot use a cookie names <code>XSRF-TOKEN</code> for reasons I won&rsquo;t go into.  So we can alter this in the server side code easily and then set the angularjs code to use this name rather than the default <code>XSRF-TOKEN</code> name.  we do this in the angular.module().config section of the code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[])</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$httpProvider&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$httpProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">xsrfCookieName</span> <span class="o">=</span> <span class="s1">&#39;FORM-XSRF&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now angular will tie up nicely to the XSRF cookie change.</p>
+
+<p>If you need to change the POST request header from <code>X-XSRF-TOKEN</code> you can use:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">xsrfHeaderName</span>  <span class="o">=</span> <span class="s1">&#39;X-FORM-XSRF&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, what happens when you <a href="http://seankenny.me/blog/2014/01/22/angularjs-xsrf-in-net-land-slidingexpiration/">introduce <code>slidingExpiration="true"</code> into the mix</a>?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CamelCaseJson]]></title>
+    <link href="http://seankenny.github.io/blog/2014/01/05/camelcasejson/"/>
+    <updated>2014-01-05T10:49:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2014/01/05/camelcasejson</id>
+    <content type="html"><![CDATA[<p>I prefer JSON camel cased.  The default setup in ASP.net Web Api using the Newtonsoft JsonSerializer is for Pascal Case.  To switch to camel case is easy and makes for a much more seamless angularJS and Web Api interaction.  In the WebAPiConfig class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="kt">var</span> <span class="n">jsonFormatter</span> <span class="p">=</span> <span class="n">GlobalConfiguration</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">;</span>
+</span><span class='line'><span class="n">jsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">ContractResolver</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CamelCasePropertyNamesContractResolver</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJS FormsAuthentication in .Net Land]]></title>
+    <link href="http://seankenny.github.io/blog/2013/10/02/angularjs-formsauthentication-in-net-land/"/>
+    <updated>2013-10-02T18:31:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/10/02/angularjs-formsauthentication-in-net-land</id>
+    <content type="html"><![CDATA[<p>There are a number of ways to authenticate an angularJS application.  This is the one I am currently using.  It uses a <code>FormsAuthentication</code> cookie in the same way as a regular ASP.Net WebForms/MVC app would.</p>
+
+<p>The structure is basically Web Api, a single MVC home controller with an Index.cshtml and angular.</p>
+
+<!--more-->
+
+
+<p>The HTML sign in form:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form&quot;</span> <span class="err">novalidate</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;user.userName&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;user.password&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Sign In&quot;</span> <span class="na">data-ng-click=</span><span class="s">&quot;signin(user)&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Clicking the &lsquo;Sign In&rsquo; calls the Angular Sign In function:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$scope</span><span class="p">.</span><span class="nx">signin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/accounts/signin&#39;</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">user</span><span class="p">.</span><span class="nx">authenticated</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>            <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">user</span><span class="p">;</span>
+</span><span class='line'>            <span class="nx">$location</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">})</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">user</span><span class="p">.</span><span class="nx">authenticated</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>            <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which calls the Web Api Accounts Controller</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AccountsController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="na">    [HttpPost]</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SignIn</span><span class="p">(</span><span class="n">UserDataModel</span> <span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// authenticate the user however you wish to do so here....</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">authenticated</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Created</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span><span class='line'>                <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">SetAuthCookie</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">UserName</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateErrorResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Forbidden</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateErrorResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">BadRequest</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="n">ModelState</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// USER DATAMODEL:</span>
+</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">UserDataModel</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">UserName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">Password</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which adds an encrypted cookie to the response.</p>
+
+<p>So now we have a <code>$rootScope.user</code> object that has an <code>authenticated</code> property set to true/false.  This allows us to hide/show menus, etc.  Obviously this can be tampered with so we secure things by locking down any server side code we want to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Authorize]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AccountsController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="na">    [HttpPost]</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SomethingPrivate</span><span class="p">(</span><span class="n">UserDataModel</span> <span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// this will only be reached if the FromsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The sign out is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$scope</span><span class="p">.</span><span class="nx">signin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/accounts/signout&#39;</span><span class="p">).</span>
+</span><span class='line'>        <span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">localStorageService</span><span class="p">.</span><span class="nx">clearAll</span><span class="p">();</span>
+</span><span class='line'>            <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>            <span class="nx">$location</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which calls the Web Api Accounts SignOut Controller Action</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AccountsController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="na">    [HttpPost]</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SignOut</span><span class="p">(</span><span class="n">UserDataModel</span> <span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Created</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">SignOut</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateErrorResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">BadRequest</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="n">ModelState</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will remove the FormsAuthentication cookie from the user&rsquo;s browser.  The angularjs <code>$rootScope.user</code> will be reset and we are now logged out.</p>
+
+<p>The only other thing to be aware of is when the user refreshed the page, etc.  We need to authomatically &lsquo;sign in&rsquo; the user if the cookie is present.  This is done on our MVC Controller that supplies the Index.cshtml page.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">HomeController</span> <span class="p">:</span> <span class="n">Controller</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="na">    [HttpPost]</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">ViewResult</span> <span class="nf">Index</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="kt">var</span> <span class="n">dataModel</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BootStrapperDataModel</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">Authenticated</span> <span class="p">=</span> <span class="n">Request</span><span class="p">.</span><span class="n">IsAuthenticated</span> <span class="p">?</span> <span class="s">&quot;true&quot;</span><span class="p">:</span> <span class="s">&quot;false&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">IsAuthenticated</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">dataModel</span><span class="p">.</span><span class="n">UserName</span> <span class="p">=</span> <span class="n">Thread</span><span class="p">.</span><span class="n">CurrentPrincipal</span><span class="p">.</span><span class="n">Identity</span><span class="p">.</span><span class="n">Name</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nf">View</span><span class="p">(</span><span class="n">dataModel</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the update to the Index.cshtml to update the <code>$rootScope.user</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>@model BootStrapperDataModel
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-init=</span><span class="s">&quot;user={authenticated:&#39;@Model.Authenticated&#39;,userName:&#39;@Model.UserName&#39;}&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MyController&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check out the <a href="http://seankenny.me/blog/2013/10/02/preloading-angularjs-data-in-net-land/">post</a> on ng-init to see how to hook this up with angularjs in more detail.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Preloading AngularJS Data in .Net Land]]></title>
+    <link href="http://seankenny.github.io/blog/2013/09/29/preloading-angularjs-data-in-net-land/"/>
+    <updated>2013-09-29T17:17:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/09/29/preloading-angularjs-data-in-net-land</id>
+    <content type="html"><![CDATA[<p>When an angularjs site initially starts up, it can take a little time for all the various HTTP requests to complete.</p>
+
+<p>HTTP requests</p>
+
+<ul>
+<li>GET Index.cshtml</li>
+<li>GET the various JS and CSS files (hopefully only one minified version of each)
+<!--more-->
+Now angularjs starts up.  Usually the first thing an angular controller will do it to get data for the UI:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyController&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;$http&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">){</span>
+</span><span class='line'>  <span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;api/users/1&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// other stuff</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is yet another HTTP request.  However it is one that we do not have to make if we make use of <code>ng-init</code>.</p>
+
+<p>Create the ViewModel/DataModel:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">UserDataModel</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">public</span> <span class="kt">string</span> <span class="n">FirstName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">public</span> <span class="kt">string</span> <span class="n">LastName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the MVC controller:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">ViewResult</span> <span class="nf">Index</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kt">var</span> <span class="n">dataModel</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UserDataModel</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="n">FirstName</span> <span class="p">=</span> <span class="s">&quot;Joe&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">LastName</span> <span class="p">=</span> <span class="s">&quot;Shmoe&quot;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nf">View</span><span class="p">(</span><span class="n">dataModel</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the html:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>@model UserDataModel
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&#39;MyController&#39;</span> <span class="na">ng-init=</span><span class="s">&quot;user={name:&#39;@Model.FirstName&#39;,lastName:&#39;@Model.LastName&#39;}&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our angularjs controller changes to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyController&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;$http&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">){</span>
+</span><span class='line'>  <span class="c1">// other stuff</span>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now we have the <code>user</code> object in our controller <code>$scope</code>.</p>
+
+<p>Just be aware that the ng-init is on the same HTML element as the ng-controller so it will run after the controller is instantiated.  The object will get put on the controller <code>$scope</code> but will be available immediately in the controller init path.  You can use the <a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$evalAsync"><code>$scope.evalAsync</code> function</a> in that case which will re-evaluate the $scope.user on the $digest cycle.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api, Entity Framework and ISO 8601 Date Formats]]></title>
+    <link href="http://seankenny.github.io/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/"/>
+    <updated>2013-09-19T17:50:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats</id>
+    <content type="html"><![CDATA[<p>For those using Web Api to deliver json payloads, you might come across an issue relating to dates, more specifically, timezones.</p>
+
+<p>The <code>ISO8601</code> date format is becoming the defacto format for date strings and is now the default for the default Web Api serialiser, <a href="http://james.newtonking.com/pages/json-net.aspx">Json.Net</a>.</p>
+
+<p>The <code>ISO8601</code> date specification explicitly states what happens when the <code>TZD</code> (or time zone designator) is ommited.  Read more <a href="http://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators">here</a>. It states:</p>
+
+<!--more-->
+
+
+<blockquote><p>If no UTC relation information is given with a time representation, the time is assumed to be in local time.</p></blockquote>
+
+<h3>Entity Framework</h3>
+
+<p>We should always store datetime as UTC in the database.  However, when we are retrieving an Entity Framework model, date properties are given a <code>DateTime.DateKind</code> of <code>Unspecified</code>.  When the Json.Net serialiser serialises this, it has to assume that the datetime is not UTC and so the date will serialise to a string as <code>2013-09-19T07:00:00</code> rather than <code>2013-09-19T07:00:00Z</code> &lt;&mdash; see the &lsquo;Z&rsquo; bit? That&rsquo;s the <code>TZD</code> UTC indicator.  This is a fair call from Json.Net.</p>
+
+<p>There is no easy way to get Entity Framework (Code First) to set the DateKind to UTC without either reflecting through each and every property when a model is retrieved by the <code>DbContext</code> (by subscribing to the <code>ObjectContext.ObjectMaterialized</code> event) or by adopting a more manual approach using:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">DateTime</span><span class="p">.</span><span class="n">SpecifyKind</span><span class="p">(</span><span class="n">myDate</span><span class="p">,</span> <span class="n">DateTimeKind</span><span class="p">.</span><span class="n">Utc</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>on each datetime property.</p>
+
+<h3>EcmaScript 5</h3>
+
+<p>Now onto another (related) issue.  For some reason I cannot fathom, the ECMAScript 5 ISO8601 specification differs fundamentally from the <a href="http://es5.github.io/#x15.9.1.15">ISO spec</a>:</p>
+
+<blockquote><p>The value of an absent time zone offset is “Z”.</p></blockquote>
+
+<p>So those implementing to the ISO spec will handle the date as 7am local time whereas those implementing to ECMAScript 5 spec will handle as 7am UTC.  Not nice.</p>
+
+<p>To handle this, we need to always pass UTC dates from our web Api and, because we are doing this, we can enforce the serialiser to append the UTC <code>TZD</code> of <code>Z</code> by adding this to the Web Api configuration:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'> <span class="kt">var</span> <span class="n">jsonFormatter</span> <span class="p">=</span> <span class="n">GlobalConfiguration</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">;</span>
+</span><span class='line'> <span class="n">jsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">DateTimeZoneHandling</span> <span class="p">=</span> <span class="n">DateTimeZoneHandling</span><span class="p">.</span><span class="n">Utc</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a pretty blunt approach but it works p</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[404 With Relative Paths and the Web Optimization Framework]]></title>
+    <link href="http://seankenny.github.io/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework/"/>
+    <updated>2013-09-04T18:54:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/09/04/404-with-relative-paths-and-the-web-optimization-framework</id>
+    <content type="html"><![CDATA[<p>We want to minify and combine our javascript and css files when moving into a production environment to reduce as much as we can the time taken for our web pages to load.  In .Net land, we might use the <a href="http://www.nuget.org/packages/microsoft.aspnet.web.optimization/">Microsoft ASP.NET Web Optimization Framework</a> to do this.</p>
+
+<p>There is sometimes an issue where a css file has a relative path reference to an image.  An example of this is in twitter bootstrap.  See that url?  That&rsquo;s a problem for us.</p>
+
+<!--more-->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;icon-&quot;</span><span class="o">],</span>
+</span><span class='line'><span class="o">[</span><span class="nt">class</span><span class="o">*=</span><span class="s2">&quot; icon-&quot;</span><span class="o">]</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">display</span><span class="o">:</span> <span class="k">inline</span><span class="o">-</span><span class="k">block</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">width</span><span class="o">:</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">height</span><span class="o">:</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">margin-top</span><span class="o">:</span> <span class="m">1px</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">*</span><span class="k">margin-right</span><span class="o">:</span> <span class="m">.3em</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">line-height</span><span class="o">:</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">vertical-align</span><span class="o">:</span> <span class="k">text</span><span class="o">-</span><span class="k">top</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background-image</span><span class="o">:</span> <span class="sx">url(&quot;../img/glyphicons-halflings.png&quot;)</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background-position</span><span class="o">:</span> <span class="m">14px</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background-repeat</span><span class="o">:</span> <span class="k">no-repeat</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We would create a bundle:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">bundles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StyleBundle</span><span class="p">(</span><span class="s">&quot;~/styles/css&quot;</span><span class="p">).</span><span class="n">Include</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap.css&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap-responsive.css&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/site.css&quot;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we minify this and all our site specific stylesheets into a bundle and then render the HTML, we&rsquo;ll get a <code>404 HTTP NOT FOUND</code> exception that we can see in the chrome developer tools (under the <code>network</code> tab).  The bundle will be generated as &lsquo;styles/css/&rsquo; and the url will check for the image in <code>styles/css/../img/glyphicons-halflings.png</code>.</p>
+
+<p>Luckily there is an option in the optimization framework called <code>CssRewriteUrlTransform()</code> to handle this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">bundles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StyleBundle</span><span class="p">(</span><span class="s">&quot;~/styles/app&quot;</span><span class="p">).</span><span class="n">Include</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap.css&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">CssRewriteUrlTransform</span><span class="p">()).</span><span class="n">Include</span><span class="p">(</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/bootstrap/css/bootstrap-responsive.css&quot;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s">&quot;~/Content/site.css&quot;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>No more 404.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[FullCalendar - With a Resource Day View!]]></title>
+    <link href="http://seankenny.github.io/blog/2013/08/14/fullcalendar-with-a-resource-day-view/"/>
+    <updated>2013-08-14T19:29:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/08/14/fullcalendar-with-a-resource-day-view</id>
+    <content type="html"><![CDATA[<p><a href="http://arshaw.com/fullcalendar/">FullCalendar</a> is a JavaScript calendar JQuery plug-in.  I&rsquo;ve used it now on 2 projects and it&rsquo;s just great.</p>
+
+<p>So on another project, we needed to be able to see the calendar agenda day view with it split into vertical columns for each &lsquo;resource&rsquo;.  There are a few forks that are doing this with FullCalendar but they aren&rsquo;t really suitable for us.  One has resource rows rather than columns and the other is a fork of an old version of the FullCalendar code.</p>
+
+<p>So I went ahead and forked the source on github.  The goal was to keep the forked version as similar to the core as possible &ndash; that way upstream merging should be easier.</p>
+
+<!--more-->
+
+
+<h3>Demo</h3>
+
+<p><a href="http://plnkr.co/edit/8d16J15gKhE2IKCATspZ?p=preview">Here</a> is a working demo of the plugin with resources.</p>
+
+<h3>Code</h3>
+
+<p>The source code of it is <a href="https://github.com/seankenny/fullcalendar">here</a>.</p>
+
+<h3>Usage</h3>
+
+<p>The only difference to the consumer of the plugin is that there is a new option (&lsquo;resources&rsquo;) and there is a new property on the <code>eventObject</code> named <code>resourceId</code> that we use to tie back to the relevant resource.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#calendar&#39;</span><span class="p">).</span><span class="nx">fullCalendar</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">defaultView</span><span class="o">:</span> <span class="s1">&#39;resourceDay&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">resources</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="o">:</span><span class="s1">&#39;r1&#39;</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="o">:</span><span class="s1">&#39;Resource 1&#39;</span><span class="p">},{</span><span class="s1">&#39;id&#39;</span><span class="o">:</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="o">:</span><span class="s1">&#39;Resource 2&#39;</span><span class="p">}],</span>
+</span><span class='line'>  <span class="c1">//resources: &#39;data-url&#39;  //you can use just a url to your resources data if you want </span>
+</span><span class='line'>  <span class="nx">events</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;R1-R2: Lunch 14.00-15.00&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">start</span><span class="o">:</span> <span class="s1">&#39;2013-08-21T14:00:00.000Z&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">end</span><span class="o">:</span> <span class="s1">&#39;2013-08-21T15:00:00.000Z&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">resources</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;r1&#39;</span><span class="p">,</span><span class="s1">&#39;r2&#39;</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>event.resources</code> property can take any of the following formats:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">events</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nx">resources</span><span class="o">:</span> <span class="s1">&#39;r1&#39;</span>  <span class="c1">// to assign this event to the r1 resource</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// OR</span>
+</span><span class='line'><span class="nx">events</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nx">resources</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;r1&#39;</span><span class="p">]</span>  <span class="c1">// to assign this event to the r1 resource</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// OR</span>
+</span><span class='line'><span class="nx">events</span><span class="o">:</span> <span class="p">[</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nx">resources</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;r1&#39;</span><span class="p">,</span><span class="s1">&#39;r2&#39;</span><span class="p">]</span>  <span class="c1">// to assign this event to the r1 &amp; r2 resources</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The resources option on the calendar object also accepts a <code>className</code> to allow the styling of the individual resource columns:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#calendar&#39;</span><span class="p">).</span><span class="nx">fullCalendar</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">resources</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="o">:</span><span class="s1">&#39;r1&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="o">:</span><span class="s1">&#39;Resource 1&#39;</span><span class="p">,</span> <span class="s1">&#39;className&#39;</span> <span class="o">:</span> <span class="p">[</span><span class="s1">&#39;my-class-name&#39;</span><span class="p">]}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enjoy!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[AngularJs in HTML5 Mode With Express]]></title>
+    <link href="http://seankenny.github.io/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs/"/>
+    <updated>2013-08-05T18:49:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/08/05/angularjs-in-html5-mode-with-expressjs</id>
+    <content type="html"><![CDATA[<p>By default, the routing in angular utilises the hash character in the URI path.  For example <code>http://myapp/#/customers/5</code>. By setting the $locationProvider to html5Mode, we can get to <code>http://myapp/customers/5</code> which is a lot nicer.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]).</span>
+</span><span class='line'>  <span class="nx">config</span><span class="p">([</span><span class="s1">&#39;$routeProvider&#39;</span><span class="p">,</span> <span class="s1">&#39;$locationProvider&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">,</span> <span class="nx">$locationProvider</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$routeProvider</span><span class="p">.</span>
+</span><span class='line'>      <span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/customers/:customerId&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;partials/customer.html&#39;</span><span class="p">,</span> <span class="nx">controller</span><span class="o">:</span> <span class="nx">CustomerCtrl</span><span class="p">}).</span>
+</span><span class='line'>      <span class="nx">otherwise</span><span class="p">({</span><span class="nx">redirectTo</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$locationProvider</span><span class="p">.</span><span class="nx">html5Mode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}]);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>However, when the page is refreshed, the browser has no way of knowing it should hit <code>http://myapp/</code> and then defer control to angular&rsquo;s routing.  Instead, it will do a <code>GET</code> request to the <code>http://myapp/customers/5</code> endpoint.  Which of course, does not exist.</p>
+
+<p>To allow for this, we need to have a catch-all route in our web server, <a href="http://expressjs.com/">Express</a> for this example.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">)();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">configure</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="c1">// static - all our js, css, images, etc go into the assets path</span>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/assets&#39;</span><span class="p">,</span> <span class="nx">express</span><span class="p">.</span><span class="kr">static</span><span class="p">(</span><span class="s1">&#39;/assets&#39;</span><span class="p">));</span>
+</span><span class='line'>  <span class="c1">//If we get here then the request for a static file is invalid so we may as well stop here</span>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/assets&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="mi">404</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/customers/:id&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+</span><span class='line'>    <span class="c1">// return data for customer....</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// This route deals enables HTML5Mode by forwarding missing files to the index.html</span>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">&#39;/*&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">sendfile</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9000</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NPM - ERR! Registry Error Parsing Json]]></title>
+    <link href="http://seankenny.github.io/blog/2013/08/04/npm-err-registry-error-parsing-json/"/>
+    <updated>2013-08-04T14:44:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/08/04/npm-err-registry-error-parsing-json</id>
+    <content type="html"><![CDATA[<p>Today I upgraded to node 0.10.15 and just ran npm install on a project I am working on.  I started seeing a lot of these failures:</p>
+
+<pre><code>npm - ERR! registry error parsing json
+npm - ERR! SyntaxError: Unexpected token &lt;
+</code></pre>
+
+<p>I had already run the npm install command maybe 30 minutes previously so I thought it might be something to do with the node/npm versions so I did the usual and rolled back.  Same issue.  Ok so maybe a corrupt module or something?  <code>npm cache clean</code> was next.  Still no change.</p>
+
+<!--more-->
+
+
+<p>Ok so what the heck is going on?  Looking a bit more closely showed that npm appeared to be setting the mime type to html on the reponse.  Hang on &ndash; the npm registry does not return html.  So somewhere along the line a proxy or some other intermediary was setting the type.</p>
+
+<p>Anyway, long story short &ndash; reboot of the laptop and we were back in business.  I can only guess that, with the various upgrade installs and some other tasks I was running, something caused this mess.</p>
+
+<p>Just one of those things.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unit Testing ASP.Net MVC JSONResults]]></title>
+    <link href="http://seankenny.github.io/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/"/>
+    <updated>2013-05-02T17:40:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults</id>
+    <content type="html"><![CDATA[<p>Let&rsquo;s say we have a controller action that returns a <code>JsonResult</code> with an anonymous type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">JsonResult</span> <span class="nf">Customer</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">,</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nf">Json</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span> <span class="n">JsonRequestBehavior</span><span class="p">.</span><span class="n">AllowGet</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>We&rsquo;d like to test the response (using <a href="www.nunit.org">NUnit</a>).  We have a number of options here.</p>
+
+<h2>The &lsquo;Correct&rsquo; (AKA long) way</h2>
+
+<p>This approach is how the MVC framework tests work.  You can browse though it <a href="http://aspnetwebstack.codeplex.com/SourceControl/latest#test/System.Web.Mvc.Test/Test/JsonResultTest.cs">here</a>.  Here we are using <a href="https://code.google.com/p/moq/">Moq</a> to mock out the <code>HttpResponseBase</code> and the <code>ControllerContext</code>.  This allows us to grab what would normally be written to the <code>HttpContext.Response</code> and redirect into a <code>StringBuilder</code> object which we can interrogate later.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">sb</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="p">();</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">mockResponse</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">HttpResponseBase</span><span class="p">&gt;();</span>
+</span><span class='line'>    <span class="n">mockResponse</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">s</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;())).</span><span class="n">Callback</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">sb</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">c</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">mockControllerContext</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">ControllerContext</span><span class="p">&gt;();</span>
+</span><span class='line'>    <span class="n">mockControllerContext</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Response</span><span class="p">).</span><span class="n">Returns</span><span class="p">(</span><span class="n">mockResponse</span><span class="p">.</span><span class="n">Object</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">result</span><span class="p">.</span><span class="n">ExecuteResult</span><span class="p">(</span><span class="n">mockControllerContext</span><span class="p">.</span><span class="n">Object</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="s">@&quot;{&quot;&quot;Id&quot;&quot;:1,&quot;&quot;Name&quot;&quot;:&quot;&quot;John&quot;&quot;}&quot;</span><span class="p">,</span> <span class="n">sb</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can make this a little easier to read and maintain by adding a serializer:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">serializer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JavaScriptSerializer</span><span class="p">();</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">sb</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="p">();</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">HttpResponseBase</span><span class="p">&gt;();</span>
+</span><span class='line'>    <span class="n">response</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">s</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;())).</span><span class="n">Callback</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">sb</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">c</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controllerContext</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">ControllerContext</span><span class="p">&gt;();</span>
+</span><span class='line'>    <span class="n">controllerContext</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Response</span><span class="p">).</span><span class="n">Returns</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">Object</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">result</span><span class="p">.</span><span class="n">ExecuteResult</span><span class="p">(</span><span class="n">controllerContext</span><span class="p">.</span><span class="n">Object</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">dynamicResponse</span> <span class="p">=</span> <span class="n">serializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="kt">dynamic</span><span class="p">&gt;(</span><span class="n">sb</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">dynamicResponse</span><span class="p">[</span><span class="s">&quot;Id&quot;</span><span class="p">]);</span>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span> <span class="n">dynamicResponse</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Utilising a serialiser</h2>
+
+<p>We are getting back a <code>JsonResult.Data</code> object.  It is is still an anoymous object and has not yet been serialized by the <code>HttpResponseBase</code> object.  The object looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;John&quot;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rather than this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span> <span class="s2">&quot;Id&quot;</span> <span class="o">:</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span> <span class="s2">&quot;Name&quot;</span> <span class="o">:</span> <span class="s2">&quot;John&quot;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Two approaches here.  This first approach (much like the first test above) results in a pretty unreadable/unmaintainable test even providing your <code>JsonResult.Data</code> is small.  It is very easy to get the string output wrong and cause a false failing test.  It is quick and easy though.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">serializer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JavaScriptSerializer</span><span class="p">();</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">serializedData</span> <span class="p">=</span> <span class="n">serializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="s">@&quot;{&quot;&quot;Id&quot;&quot;:1,&quot;&quot;Name&quot;&quot;:&quot;&quot;John&quot;&quot;}&quot;</span><span class="p">,</span> <span class="n">serializedData</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This test is slightly better in that it is more readable but requires us to serialise the <code>response.Data</code> into a string, cast into a dynamic then deserialize back to a dynamic.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">serializer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JavaScriptSerializer</span><span class="p">();</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">obj</span> <span class="p">=</span> <span class="n">serializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">)</span> <span class="k">as</span> <span class="kt">dynamic</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">serializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="kt">dynamic</span><span class="p">&gt;(</span><span class="n">obj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">customer</span><span class="p">[</span><span class="s">&quot;Id&quot;</span><span class="p">]);</span>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span> <span class="n">customer</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reflection</h2>
+
+<p>This test uses <code>Reflection</code> to get to the <code>JsonResult.Data</code>.  The code here could obviously be abstracted away into an extension method or some other such way but the bones of it are as follows.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">dataType</span> <span class="p">=</span> <span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">.</span><span class="n">GetType</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">dataType</span><span class="p">.</span><span class="n">GetProperty</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">).</span><span class="n">GetValue</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">));</span>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span> <span class="n">dataType</span><span class="p">.</span><span class="n">GetProperty</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">).</span><span class="n">GetValue</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>RouteValueDictionary</h2>
+
+<p>We can so it using a much easier approach using <code>RouteValueDictionary</code>.  I  quite like this approach although it is a little counter intuitive to use the <code>RouteValueDictionary</code> class for accessing an anonymous type.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RouteValueDictionary</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">customer</span><span class="p">[</span><span class="s">&quot;Id&quot;</span><span class="p">]);</span>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">AreEqual</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span> <span class="n">customer</span><span class="p">[</span><span class="s">&quot;Name&quot;</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>dynamic and <code>InternalsVisibleTo</code></h2>
+
+<hr />
+
+<p>Finally, we can use <code>dynamic</code>.  I much prefer the testing syntax of this approach but (there is always a &lsquo;but&rsquo;) there is an issue.  <code>JsonResult.Data</code> is an anonymous type and these are, by default, declared as <code>internal</code> to their assembly and most tests are declared in a seperate project so no access to internal anonymous types in the controller assembly.  By the time we get access to the <code>JsonResult.Data</code> we see it as an object.</p>
+
+<p>If we run our test below, we will get a <code>RuntimeBinderException</code> exception <code>'object' does not contain a definition for 'Id</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[Test]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">void</span> <span class="nf">GetCustomer_WhenGivenAnId_ReturnsValidCustomer</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerController</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="n">controller</span><span class="p">.</span><span class="n">Customer</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="kt">dynamic</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">response</span><span class="p">.</span><span class="n">Data</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">That</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">Assert</span><span class="p">.</span><span class="n">That</span><span class="p">(</span><span class="s">&quot;John&quot;</span><span class="p">,</span> <span class="n">customer</span><span class="p">.</span><span class="n">Name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Adding <code>[assembly: InternalsVisibleTo("MyTestProject")]</code> attribute on the web project <code>AssemblyInfo.cs</code> class (in the <code>Properties</code> folder) will allow our test to access the <code>JsonResult.Data</code> anonymous type.  Re-run the test and all green.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Entity Framework Migrations - No Logical Space Left to Create More User Strings]]></title>
+    <link href="http://seankenny.github.io/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/"/>
+    <updated>2012-07-15T18:41:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings</id>
+    <content type="html"><![CDATA[<p>Yesterday we started seeing a compile time exception:</p>
+
+<pre><code>Unexpected error writing metadata to file 'e:\….\obj\Release\…Repository.EntityFramework.dll'
+-- 'No logical space left to create more user strings'
+</code></pre>
+
+<p>As it turns out, this related to us having too many migration scripts, in our case, > 90.</p>
+
+<!--more-->
+
+
+<p>The problem is that each time we generate a new script, a snapshot of the model schema is hashed into the migration designer IMigrationMetadata.Target property.</p>
+
+<p>As we have a lot of developers working on the solution, we reached the limit pretty quickly.  I believe MS know about this issue and are talking about trying to resolve in EF6.</p>
+
+<p>How to resolve?  Well we could use resx files as was outlined here but, for us, this is a non runner for various reasons.  Instead we have had to re-baseline the migration scripts.  Not ideal but that’s what we came up with.</p>
+
+<h2>Environments</h2>
+
+<p>We have them in abundance.  Developer local, CI, Test, Stage, Stage Integration, Production.  Each one is in a different state so what to do?</p>
+
+<p>We checked all the environments and looked at the __MigrationHistory table to see the latest script that was common to all.  Then we went to the script prior to that.  That’s our baseline target.</p>
+
+<p>Create the baseline</p>
+
+<p>Next, as we have seeded data in our app, we need to get this data in a usable format.  We rolled back a dev machine to the change set related to our baseline target script.  Dump the local database, then recreate.  Next in SQL Management Studio, right click the database and Tasks –> generate scripts.  Select the Advanced option and set ‘Types of Data to Script’ to Data only.  This will generate a bunch of INSERT statements.</p>
+
+<p>Drop the local database again.</p>
+
+<p>Back in the project, delete all the migration script files.  Add-Migration a new baseline one.  This will create the schema for you.  Add the insert statements as Sql(“INSERT….”); in your script.  We have quite a crude mechanism to prevent any of this script running in on any non-debug environment:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="cp">#if !DEBUG </span>
+</span><span class='line'>  <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hey, it works for us!</p>
+
+<p>We then tweaked the timestamp in the name of the script and also in the <code>IMigrationMetadata.Id</code> property of the designer to a little after the target baseline script.  This keeps it looking correct.</p>
+
+<p>Finally, get latest from source control (remember, we were at the change set of the target baseline script up to now).</p>
+
+<h2>Deploy</h2>
+
+<p>When we deployed and the migrations kicked in, it ran our new baseline script (which does nothing as we have our  #if !DEBUG in there). But the application fails with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Unable</span> <span class="n">to</span> <span class="n">update</span> <span class="n">database</span> <span class="n">to</span> <span class="n">match</span> <span class="n">the</span> <span class="n">current</span> <span class="n">model</span> <span class="n">because</span> <span class="n">there</span> <span class="n">are</span> <span class="n">pending</span> <span class="n">changes</span> <span class="n">and</span> <span class="n">automatic</span>
+</span><span class='line'><span class="n">migration</span> <span class="k">is</span> <span class="n">disabled</span><span class="p">.</span> <span class="n">Either</span> <span class="n">write</span> <span class="n">the</span> <span class="n">pending</span> <span class="n">model</span> <span class="n">changes</span> <span class="n">to</span> <span class="n">a</span> <span class="n">code</span><span class="p">-</span><span class="n">based</span> <span class="n">migration</span> <span class="n">or</span> <span class="n">enable</span>
+</span><span class='line'><span class="n">automatic</span> <span class="n">migration</span><span class="p">.</span> <span class="n">Set</span> <span class="n">DbMigrationsConfiguration</span><span class="p">.</span><span class="n">AutomaticMigrationsEnabled</span> <span class="n">to</span> <span class="k">true</span> <span class="n">to</span> <span class="n">enable</span>
+</span><span class='line'><span class="n">automatic</span> <span class="n">migration</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So another little tweak, this time to the <code>__MigrationHistory</code> table.  Find the entry for the baseline script and change the CreatedOn date to a little after the target baseline script.</p>
+
+<p>All good.</p>
+
+<p>Conclusion</p>
+
+<p>While what we did is pretty hacky, it gets us out of a bind.  10+ developers can now get back to work and, until MS resolve the issue, at least we have a ‘resolution’.</p>
+
+<p>EDIT &ndash; and they have.  The designer now utilises a resx file to store the hash.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Infinite Scrolling With JQuery]]></title>
+    <link href="http://seankenny.github.io/blog/2012/05/11/infinite-scrolling-with-jquery/"/>
+    <updated>2012-05-11T18:52:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2012/05/11/infinite-scrolling-with-jquery</id>
+    <content type="html"><![CDATA[<p>Recently I was asked to include an infinite scroll for a client’s twitter account on their homepage.  I was surprised at how easy it turns out to be.</p>
+
+<p>In a nutshell, it consists of:</p>
+
+<p>Use AJAX to hit Twitter’s timeline API to get the tweets</p>
+
+<!--more-->
+
+
+<p>Use JQuery to detect when the user is scrolling</p>
+
+<p>Use a little bit of maths to figure out when to trigger another page of tweets</p>
+
+<p>First, we add a link to grab JQuery from the Google CDN.</p>
+
+<p>Next, add in placeholders for the tweets</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;body&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&#39;tweets&#39;</span><span class="nt">&gt;&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/body&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the call to get the tweets from Twitter and add them as items to our list (I’m using Stephen Fry as the test subject as he tweets LOADS):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://api.twitter.com/1/statuses/user_timeline.json&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;stephenfry&#39;</span>
+</span><span class='line'>    <span class="nx">skip_user</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">page</span><span class="o">:</span> <span class="nx">pageNumber</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">response</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tweets&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;&#39;</span> <span class="o">+</span> <span class="nx">response</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">text</span> <span class="o">+</span> <span class="s1">&#39;&lt;/li&gt;&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that we are passing in the page number.  This is important for the next few bits.</p>
+
+<p>Now we add the JQuery to load the page on opening.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">getPagedTweets</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For the infinite scroll, we need to do a few things.  First, we need to be able to pass the next page to Twitter’s API so we need a mechanism to store it.  We can use a HTML5 data item to do this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;tweets&quot;</span> <span class="na">data-nextpage=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;&lt;/ul&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, we need a nextPage function to get and set this value as well as call the getPagedTweets function we already have:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">nextPage</span><span class="p">(){</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">pageNumber</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tweets&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;data-nextpage&#39;</span><span class="p">));</span>
+</span><span class='line'>  <span class="nx">getPagedTweets</span><span class="p">(</span><span class="nx">pageNumber</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tweets&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;data-nextpage&#39;</span><span class="p">,</span> <span class="nx">pageNumber</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, we need the JQuery to trigger an event when the user scrolls to the bottom of the page:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">getPagedTweets</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scroll</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">()</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">height</span><span class="p">()</span> <span class="o">-</span> <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">height</span><span class="p">()){</span>
+</span><span class='line'>      <span class="nx">nextPage</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that should be that.</p>
+
+<p>Note the page should be resized to ensure that scrollbars are visible otherwise this will not work as the user needs to scroll in order for the next page call to work.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Something I Learned Today – Declaritive Authorization]]></title>
+    <link href="http://seankenny.github.io/blog/2012/01/11/something-i-learned-today-declaritive-authorization/"/>
+    <updated>2012-01-11T18:53:00+00:00</updated>
+    <id>http://seankenny.github.io/blog/2012/01/11/something-i-learned-today-declaritive-authorization</id>
+    <content type="html"><![CDATA[<p>Well not exactly true.  We’ve been using this great gem for a while now on our first venture into Ruby on Rails.</p>
+
+<p>Ryan Bates over at RailsCasts has a great session on the topic.  We implemented the basic vanilla version on our RESTful controller actions and models and everything seemed to run fine after making a few tweaks.</p>
+
+<!--more-->
+
+
+<p>Then a funny thing happened.  One of the guys ran the db:migrate on a fresh database and when he tried to access a page that had an AJAX call on it, the ajax failed.  Looking at the console, we got an ActiveRecord exception.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Resource</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="sb">`resources`</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="sb">`resources`</span> <span class="no">WHERE</span> <span class="p">(</span><span class="sb">`resources`</span><span class="o">.</span><span class="n">`</span><span class="nb">id</span><span class="sb">` = 1) LIMIT 1</span>
+</span><span class='line'><span class="sb">ActiveRecord::RecordNotFound (Couldn&#39;t find Resource without an ID):</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The funny thing was that the action being accessed did not call anything relating to the Resource model.  It’s an Ajax/JSON action just for a dropdown filter on the page.</p>
+
+<p>It took a while to figure and it boiled down to RTFM!  Declaritive Authorizaton will always load up the model for each action in your locked down controller in order to figure out if the thread has access.  News to me although it does mean that we were able to remove all the model finds, etc., in our RESTful actions show, new, edit..).</p>
+
+<p>To fix this particular issue, all that is required is to tell create a dummy model prior to DA kicking in.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Admin</span><span class="o">::</span><span class="no">ResourcesController</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="no">Admin</span><span class="o">::</span><span class="no">BaseController</span>
+</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:new_resource</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:for_resource_type_id</span>
+</span><span class='line'>  <span class="n">filter_resource_access</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">for_resource_type_id</span>
+</span><span class='line'>    <span class="vi">@resourcegroups</span> <span class="o">=</span> <span class="no">ResourceGroup</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">&#39;resource_type_id = ?&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render</span> <span class="ss">:json</span> <span class="o">=&gt;</span> <span class="vi">@resourcegroups</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">new_resource</span>
+</span><span class='line'>    <span class="vi">@resource</span> <span class="o">=</span> <span class="no">Resource</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Easy when you know how.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JQuery Binding With the Future in Mind]]></title>
+    <link href="http://seankenny.github.io/blog/2011/10/11/jquery-binding-with-the-future-in-mind/"/>
+    <updated>2011-10-11T18:53:00+01:00</updated>
+    <id>http://seankenny.github.io/blog/2011/10/11/jquery-binding-with-the-future-in-mind</id>
+    <content type="html"><![CDATA[<p>This was something that confused me for a while when I started JQuery – binding.  You add a new html element and want to bind to a click event for example on that element. Sounds straightforward.</p>
+
+<p>We have 2 divs, the first being static and the second being a placeholder that we will dynamically add more html elements to.</p>
+
+<!--more-->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;ClickMe&#39;</span><span class="nt">&gt;</span>Click on me!<span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;placeholder&#39;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We add our elements using JQuery like this</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">newItems</span> <span class="o">=</span> <span class="s1">&#39;&lt;div id=&quot;ClickMeToo&quot;&gt;Click on me as well!&lt;/div&gt;&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#placeholder&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">newItems</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we browse to the page, as expected, we get the 2 divs.</p>
+
+<p>Now we can add the click events:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">newItems</span> <span class="o">=</span> <span class="s1">&#39;&lt;div id=&quot;ClickMeToo&quot;&gt;Click on me as well!&lt;/div&gt;</span>
+</span><span class='line'><span class="s1">   </span>
+</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">placeholder</span><span class="s1">&#39;).html(newItems);  </span>
+</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">ClickMe</span><span class="s1">&#39;).click(function () {  </span>
+</span><span class='line'><span class="s1">    alert(&#39;</span><span class="nx">I</span> <span class="nx">always</span> <span class="nx">work</span><span class="s1">&#39;);  </span>
+</span><span class='line'><span class="s1">  });  </span>
+</span><span class='line'><span class="s1"> </span>
+</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">ClickMeToo</span><span class="s1">&#39;).click(function () {  </span>
+</span><span class='line'><span class="s1">    alert(&#39;</span><span class="nx">I</span> <span class="nx">don</span><span class="s1">&#39;t work...&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But the second click event does not work.  Why?  Well the answer is that the <code>ClickMeToo</code> element does not exist when the JQuery does it’s binding and the new div we added is left out in the cold.</p>
+
+<p>To resolve this, all we need to do is to amend the code $(‘#ClickMeToo’).click(function () { to the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#ClickMeToo&#39;</span><span class="p">).</span><span class="nx">live</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;I&#39;m gonna work now!&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>live</code> method tells JQuery to bind for all existing and future matches to the selector.</p>
+
+<p>EDIT: the <code>live</code> binding is now deprecated &ndash; use <code>on</code> instead!</p>
+]]></content>
+  </entry>
+  
+</feed>
