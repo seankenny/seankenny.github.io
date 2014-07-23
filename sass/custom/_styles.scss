@@ -23,9 +23,8 @@ body > div > div { border-right-width: 0px;}
 
 article header p.meta {
 top: inherit;
+font-size: 0.7em; 
 }
-
-
 
 article h1 {
 font-size: 1.8em;
@@ -64,15 +63,46 @@ body>nav>li {
 
 body>nav li+li {
 border-left: none;
+margin-left: 8em;
 }
 
 #content .blog-index a[rel=full-article] {
 color: #ffffff;
 background-color: #428bca;
 border-color: #357ebd;
+font-family: 'Open Sans',Helvetica,Arial,sans-serif;
 }
 
 #content .blog-index a[rel=full-article]:hover {
 background-color: #3276b1;
 border-color: #285e8e;
+}
+
+#content .blog-index article h1 a:hover{
+  text-decoration: none;
+}
+
+#content .blog-index article h1 {
+font-size: 2em;
+}
+
+body>header, body>nav, body>footer, body #content>article, body #content>div>article, body #content>div>section {
+padding-right: 0;
+}
+
+body>header h1 a, body>header h1 a:visited, body>header h1 a:hover {
+color: #333;
+font-family: Raleway, serif;
+font-weight: 800;
+font-size: 1.5em;
+}
+
+article a{
+  text-decoration: none;
+}
+
+body>header h1 {
+  background: url("/images/logo.png") no-repeat -0.0em -0.0em;
+  margin-left: -2em;
+  padding-left: 2.1em;
 }
