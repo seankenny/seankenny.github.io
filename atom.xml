@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-07-23T19:33:59+01:00</updated>
+  <updated>2014-07-24T17:39:17+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,122 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Resource FullCalendar - Dragging and Clicking]]></title>
+    <link href="http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/"/>
+    <updated>2014-07-24T17:31:05+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve previously posted on my &ldquo;addition of resources&rdquo; fork of the fullcalendar javascript control <a href="http://www.seankenny.me/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">here</a>.  Today I want to outline some features around the drag/drop and click events that are a little undiscoverable.</p>
+
+<h3>Select</h3>
+
+<p>To add a select event callback, use the following config setting:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">....</span>
+</span><span class='line'><span class="nx">selectable</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'><span class="nx">select</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">allDay</span><span class="p">,</span> <span class="nx">ev</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">start</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">end</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ev</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span><span class='line'><span class="p">},</span>
+</span><span class='line'><span class="p">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>This is triggered when the user clicks (or selects) the calendar (i.e. not on a calendar event).</p>
+
+<p>The start and end date of the the area you click (or click, drag and released) will be available in the first 2 params.  The <code>ev</code> parameter will contain an <code>ev.data</code> property which will contain the resource you clicked on.  In the above example, you would see something like this in chrome&rsquo;s dev tools console window:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Thu</span> <span class="nx">Jul</span> <span class="mi">24</span> <span class="mi">2014</span> <span class="mi">06</span><span class="o">:</span><span class="mi">00</span><span class="o">:</span><span class="mi">00</span> <span class="nx">GMT</span><span class="o">+</span><span class="mi">0100</span> <span class="p">(</span><span class="nx">GMT</span> <span class="nx">Summer</span> <span class="nx">Time</span><span class="p">)</span>
+</span><span class='line'><span class="nx">Thu</span> <span class="nx">Jul</span> <span class="mi">24</span> <span class="mi">2014</span> <span class="mi">09</span><span class="o">:</span><span class="mi">30</span><span class="o">:</span><span class="mi">00</span> <span class="nx">GMT</span><span class="o">+</span><span class="mi">0100</span> <span class="p">(</span><span class="nx">GMT</span> <span class="nx">Summer</span> <span class="nx">Time</span><span class="p">)</span>
+</span><span class='line'><span class="nb">Object</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;resource1&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Resource 1&quot;</span><span class="p">,</span> <span class="nx">className</span><span class="o">:</span> <span class="nb">Array</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Do not confuse <code>ev</code> with a calendar <code>event</code>!</p>
+
+<h3>Calendar Event clicking</h3>
+
+<p>To add a calendar event click callback, use the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">....</span>
+</span><span class='line'><span class="nx">eventClick</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">resources</span><span class="p">);</span>
+</span><span class='line'><span class="p">},</span>
+</span><span class='line'><span class="p">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This one is the same as the original fork with the addition of <code>resources</code> which provides the resource id(s) of the calendar event:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">[</span><span class="s2">&quot;resourceid1&quot;</span><span class="p">,</span><span class="s2">&quot;resourceid2&quot;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Calendar Event drag and drop</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">....</span>
+</span><span class='line'><span class="nx">eventDrop</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">delta</span><span class="p">,</span> <span class="nx">revertFunc</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">resources</span><span class="p">);</span>
+</span><span class='line'><span class="p">},</span>
+</span><span class='line'><span class="p">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">[</span><span class="s2">&quot;resourceid1&quot;</span><span class="p">,</span><span class="s2">&quot;resourceid2&quot;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Confusing?</h3>
+
+<p>The resource data available on these are not consistant.  For <code>eventClick</code> and <code>eventDrop</code> the calendar event is returned and this object has the <code>resources</code> array on it with the resource ids.  This is as you would set up the calendar initially.</p>
+
+<p>The <code>select</code> has no event associated with it yet &ndash; you only get the drag start and end date/times.  This is Ok until you need to figure out the resource you are interested in.  The click event has a data property which seems to fit the bill.  Maybe I should add a <code>resources</code> array for the id&rsquo;s instead?  Would lead to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">select</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">allDay</span><span class="p">,</span> <span class="nx">ev</span><span class="p">,</span> <span class="nx">resources</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">resources</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">[</span><span class="s2">&quot;resourceid1&quot;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All of the above can be seen in action on this <a href="http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview">plunkr</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Pretty Printing Xml or Json in HTML With C#]]></title>
@@ -1081,7 +1197,7 @@ Now angularjs starts up.  Usually the first thing an angular controller will do 
 
 <h3>Demo</h3>
 
-<p><a href="http://plnkr.co/edit/8d16J15gKhE2IKCATspZ?p=preview">Here</a> is a working demo of the plugin with resources.</p>
+<p><a href="http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview">Here</a> is a working demo of the plugin with resources.</p>
 
 <h3>Code</h3>
 

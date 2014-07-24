@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="There are a few different ways to pretty print objects as html in C#. We have a requirement to pretty print what might be XML or Json. The following &hellip;">
+  <meta name="description" content="I&rsquo;ve previously posted on my &ldquo;addition of resources&rdquo; fork of the fullcalendar javascript control here. Today I want to outline some &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/">Resource FullCalendar - Dragging and Clicking</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-24T17:31:05+01:00" pubdate data-updated="true">24 Jul 2014</time>
+ • <a href="/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve previously posted on my &ldquo;addition of resources&rdquo; fork of the fullcalendar javascript control <a href="http://www.seankenny.me/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">here</a>.  Today I want to outline some features around the drag/drop and click events that are a little undiscoverable.</p>
+
+<h3>Select</h3>
+
+<p>To add a select event callback, use the following config setting:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">....</span>
+</span><span class='line'><span class="nx">selectable</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'><span class="nx">select</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">allDay</span><span class="p">,</span> <span class="nx">ev</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">start</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">end</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ev</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span><span class='line'><span class="p">},</span>
+</span><span class='line'><span class="p">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -504,53 +570,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2013/09/29/preloading-angularjs-data-in-net-land/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/">Web Api, Entity Framework and ISO 8601 Date Formats</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-19T17:50:00+01:00" pubdate data-updated="true">19 Sep 2013</time>
- • <a href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/">permalink</a>
-  
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For those using Web Api to deliver json payloads, you might come across an issue relating to dates, more specifically, timezones.</p>
-
-<p>The <code>ISO8601</code> date format is becoming the defacto format for date strings and is now the default for the default Web Api serialiser, <a href="http://james.newtonking.com/pages/json-net.aspx">Json.Net</a>.</p>
-
-<p>The <code>ISO8601</code> date specification explicitly states what happens when the <code>TZD</code> (or time zone designator) is ommited.  Read more <a href="http://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators">here</a>. It states:</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/09/19/web-api-entity-framework-and-is08601-date-formats/">Read on &rarr;</a>
     </footer>
   
 

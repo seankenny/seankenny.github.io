@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Fullcalendar | Sean Kenny]]></title>
   <link href="http://www.seankenny.me/blog/categories/fullcalendar/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-07-23T19:33:59+01:00</updated>
+  <updated>2014-07-24T17:39:17+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,116 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Resource FullCalendar - Dragging and Clicking]]></title>
+    <link href="http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/"/>
+    <updated>2014-07-24T17:31:05+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve previously posted on my &ldquo;addition of resources&rdquo; fork of the fullcalendar javascript control <a href="http://www.seankenny.me/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">here</a>.  Today I want to outline some features around the drag/drop and click events that are a little undiscoverable.</p>
+
+<h3>Select</h3>
+
+<p>To add a select event callback, use the following config setting:</p>
+
+<p>```javascript</p>
+
+<pre><code>....
+selectable: true,
+select: function(start, end, allDay, ev) {
+    console.log(start);
+    console.log(end);
+    console.log(ev.data);
+},
+....
+</code></pre>
+
+<p>```</p>
+
+<!--more-->
+
+
+<p>This is triggered when the user clicks (or selects) the calendar (i.e. not on a calendar event).</p>
+
+<p>The start and end date of the the area you click (or click, drag and released) will be available in the first 2 params.  The <code>ev</code> parameter will contain an <code>ev.data</code> property which will contain the resource you clicked on.  In the above example, you would see something like this in chrome&rsquo;s dev tools console window:</p>
+
+<p>```</p>
+
+<pre><code>Thu Jul 24 2014 06:00:00 GMT+0100 (GMT Summer Time) 
+Thu Jul 24 2014 09:30:00 GMT+0100 (GMT Summer Time) 
+Object {id: "resource1", name: "Resource 1", className: Array[0]}
+</code></pre>
+
+<p>```</p>
+
+<p>Do not confuse <code>ev</code> with a calendar <code>event</code>!</p>
+
+<h3>Calendar Event clicking</h3>
+
+<p>To add a calendar event click callback, use the following:</p>
+
+<p>```javascript</p>
+
+<pre><code>....
+eventClick: function(event) {
+    console.log(event.resources);
+},
+....
+</code></pre>
+
+<p>```</p>
+
+<p>This one is the same as the original fork with the addition of <code>resources</code> which provides the resource id(s) of the calendar event:
+```</p>
+
+<pre><code>["resourceid1","resourceid2"]
+</code></pre>
+
+<p>```</p>
+
+<h3>Calendar Event drag and drop</h3>
+
+<p>```javascript</p>
+
+<pre><code>....
+eventDrop: function (event, delta, revertFunc) {
+      console.log(event.resources);
+},
+....
+</code></pre>
+
+<p><code>
+</code></p>
+
+<pre><code>["resourceid1","resourceid2"]
+</code></pre>
+
+<p>```</p>
+
+<h3>Confusing?</h3>
+
+<p>The resource data available on these are not consistant.  For <code>eventClick</code> and <code>eventDrop</code> the calendar event is returned and this object has the <code>resources</code> array on it with the resource ids.  This is as you would set up the calendar initially.</p>
+
+<p>The <code>select</code> has no event associated with it yet &ndash; you only get the drag start and end date/times.  This is Ok until you need to figure out the resource you are interested in.  The click event has a data property which seems to fit the bill.  Maybe I should add a <code>resources</code> array for the id&rsquo;s instead?  Would lead to:</p>
+
+<p>```javascript</p>
+
+<pre><code>select: function(start, end, allDay, ev, resources) {
+    console.log(resources);
+}
+</code></pre>
+
+<p><code>
+</code></p>
+
+<pre><code>["resourceid1"]
+</code></pre>
+
+<p>```</p>
+
+<p>All of the above can be seen in action on this <a href="http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview">plunkr</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[FullCalendar - With a Resource Day View!]]></title>
@@ -29,7 +139,7 @@
 
 <h3>Demo</h3>
 
-<p><a href="http://plnkr.co/edit/8d16J15gKhE2IKCATspZ?p=preview">Here</a> is a working demo of the plugin with resources.</p>
+<p><a href="http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview">Here</a> is a working demo of the plugin with resources.</p>
 
 <h3>Code</h3>
 

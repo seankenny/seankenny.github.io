@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/</loc>
+    <lastmod>2014-07-24T17:31:05+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://www.seankenny.me/blog/2014/06/28/pretty-printing-xml-or-json-in-html-with-c-number/</loc>
     <lastmod>2014-06-28T12:10:00+01:00</lastmod>
     <priority>0.8</priority>
@@ -119,14 +125,14 @@
   
   <url>
     <loc>http://www.seankenny.me/blog/archives/</loc>
-    <lastmod>2014-07-23T19:33:59+01:00</lastmod>
+    <lastmod>2014-07-24T17:39:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://www.seankenny.me/</loc>
-    <lastmod>2014-07-23T19:33:59+01:00</lastmod>
+    <lastmod>2014-07-24T17:39:17+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
