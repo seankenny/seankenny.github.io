@@ -12,7 +12,7 @@ So on another project, we needed to be able to see the calendar agenda day view 
 So I went ahead and forked the source on github.  The goal was to keep the forked version as similar to the core as possible - that way upstream merging should be easier.
 <!--more-->
 ###Demo
-[Here](http://plnkr.co/edit/8d16J15gKhE2IKCATspZ?p=preview) is a working demo of the plugin with resources.
+[Here](http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview) is a working demo of the plugin with resources.
 
 ###Code
 The source code of it is [here](https://github.com/seankenny/fullcalendar).
