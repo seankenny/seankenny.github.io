@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-07-24T17:39:17+01:00</updated>
+  <updated>2014-07-25T17:35:05+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Custom OWIN IClaimsPrincipal With Ninject]]></title>
+    <link href="http://www.seankenny.me/blog/2014/07/25/custom-owin-iclaimsprincipal-with-ninject/"/>
+    <updated>2014-07-25T17:33:19+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/07/25/custom-owin-iclaimsprincipal-with-ninject</id>
+    <content type="html"><![CDATA[<p>Having recently started using OWIN to handle authorization, I&rsquo;ve had to change a few things throughout my web api projects. To have the user&rsquo;s identity available, I usually create something like:</p>
+
+<!--more-->
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">MyPrincipal</span> <span class="p">:</span> <span class="n">IMyPrincipal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ClaimsPrincipal</span> <span class="n">claimsPrincipal</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="nf">MnsPrincipal</span><span class="p">(</span><span class="n">ClaimsPrincipal</span> <span class="n">claimsPrincipal</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="n">claimsPrincipal</span> <span class="p">=</span> <span class="n">claimsPrincipal</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="kt">string</span> <span class="n">Id</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">get</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="kt">var</span> <span class="n">claim</span> <span class="p">=</span> <span class="n">claimsPrincipal</span><span class="p">.</span><span class="n">Claims</span><span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">ClaimTypes</span><span class="p">.</span><span class="n">NameIdentifier</span><span class="p">);</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">claim</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">?</span> <span class="n">claim</span><span class="p">.</span><span class="n">Value</span> <span class="p">:</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">public</span> <span class="k">interface</span> <span class="n">IMyPrincipal</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">string</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will add the <code>ClaimsPrinciple</code> using composition allowing me to use Ninject like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">kernel</span><span class="p">.</span><span class="n">Bind</span><span class="p">&lt;</span><span class="n">IMyPrincipal</span><span class="p">&gt;()</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">ToMethod</span><span class="p">(</span><span class="n">ctx</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="n">MyPrincipal</span><span class="p">(</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Current</span><span class="p">.</span><span class="n">GetOwinContext</span><span class="p">().</span><span class="n">Authentication</span><span class="p">.</span><span class="n">User</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">InRequestScope</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I can get to the logged in user&rsquo;s Id and claims/roles by using constructor injection:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">UsersController</span> <span class="p">:</span> <span class="n">ApiController</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IMyPrincipal</span> <span class="n">myPrinciple</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="nf">UsersController</span><span class="p">(</span><span class="n">IMyPrincipal</span> <span class="n">myPrinciple</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="n">myPrinciple</span> <span class="p">=</span> <span class="n">myPrinciple</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">Get</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Request</span><span class="p">.</span><span class="n">CreateResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">OK</span><span class="p">,</span> <span class="n">myPrinciple</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span> <span class="c1">// will contain my NameIdentifier claim type</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It also allows me to get to the principal when I am no longer in the web api project. My repository/service/flavour of the month class simply has a contructor with the <code>IMyPrincipal</code> argument.</p>
+
+<p>Previously, using FormsAuth, the principal was available as an <code>IPrincipal</code> using <code>HttpContext.Current.User</code> meaning we could use inheritance.  The OWIN approach leads us down the (currently) preferred composition route :&ndash;)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Resource FullCalendar - Dragging and Clicking]]></title>
@@ -1939,88 +2048,6 @@ npm - ERR! SyntaxError: Unexpected token &lt;
 
 
 <p>Easy when you know how.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JQuery Binding With the Future in Mind]]></title>
-    <link href="http://www.seankenny.me/blog/2011/10/11/jquery-binding-with-the-future-in-mind/"/>
-    <updated>2011-10-11T18:53:00+01:00</updated>
-    <id>http://www.seankenny.me/blog/2011/10/11/jquery-binding-with-the-future-in-mind</id>
-    <content type="html"><![CDATA[<p>This was something that confused me for a while when I started JQuery – binding.  You add a new html element and want to bind to a click event for example on that element. Sounds straightforward.</p>
-
-<p>We have 2 divs, the first being static and the second being a placeholder that we will dynamically add more html elements to.</p>
-
-<!--more-->
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;ClickMe&#39;</span><span class="nt">&gt;</span>Click on me!<span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&#39;placeholder&#39;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We add our elements using JQuery like this</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">newItems</span> <span class="o">=</span> <span class="s1">&#39;&lt;div id=&quot;ClickMeToo&quot;&gt;Click on me as well!&lt;/div&gt;&#39;</span><span class="p">;</span>
-</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#placeholder&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">newItems</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>When we browse to the page, as expected, we get the 2 divs.</p>
-
-<p>Now we can add the click events:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">newItems</span> <span class="o">=</span> <span class="s1">&#39;&lt;div id=&quot;ClickMeToo&quot;&gt;Click on me as well!&lt;/div&gt;</span>
-</span><span class='line'><span class="s1">   </span>
-</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">placeholder</span><span class="s1">&#39;).html(newItems);  </span>
-</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">ClickMe</span><span class="s1">&#39;).click(function () {  </span>
-</span><span class='line'><span class="s1">    alert(&#39;</span><span class="nx">I</span> <span class="nx">always</span> <span class="nx">work</span><span class="s1">&#39;);  </span>
-</span><span class='line'><span class="s1">  });  </span>
-</span><span class='line'><span class="s1"> </span>
-</span><span class='line'><span class="s1">  $(&#39;</span><span class="err">#</span><span class="nx">ClickMeToo</span><span class="s1">&#39;).click(function () {  </span>
-</span><span class='line'><span class="s1">    alert(&#39;</span><span class="nx">I</span> <span class="nx">don</span><span class="s1">&#39;t work...&#39;</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But the second click event does not work.  Why?  Well the answer is that the <code>ClickMeToo</code> element does not exist when the JQuery does it’s binding and the new div we added is left out in the cold.</p>
-
-<p>To resolve this, all we need to do is to amend the code $(‘#ClickMeToo’).click(function () { to the following:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#ClickMeToo&#39;</span><span class="p">).</span><span class="nx">live</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;I&#39;m gonna work now!&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The <code>live</code> method tells JQuery to bind for all existing and future matches to the selector.</p>
-
-<p>EDIT: the <code>live</code> binding is now deprecated &ndash; use <code>on</code> instead!</p>
 ]]></content>
   </entry>
   
