@@ -5,6 +5,8 @@ date: 2013-08-14 19:29
 comments: true
 categories: FullCalendar
 ---
+> Update - this [Drag and Drop](http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/) post covers some other aspects of this plug-in.
+
 [FullCalendar](http://arshaw.com/fullcalendar/) is a JavaScript calendar JQuery plug-in.  I've used it now on 2 projects and it's just great.
 
 So on another project, we needed to be able to see the calendar agenda day view with it split into vertical columns for each 'resource'.  There are a few forks that are doing this with FullCalendar but they aren't really suitable for us.  One has resource rows rather than columns and the other is a fork of an old version of the FullCalendar code.
@@ -15,7 +17,7 @@ So I went ahead and forked the source on github.  The goal was to keep the forke
 [Here](http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview) is a working demo of the plugin with resources.
 
 ###Code
-The source code of it is [here](https://github.com/seankenny/fullcalendar).
+The source code of it is [here](https://github.com/seankenny/fullcalendar).  Get the js and css from here - [https://github.com/seankenny/fullcalendar/tree/master/build/out](https://github.com/seankenny/fullcalendar/tree/master/build/out).
 
 ###Usage
 The only difference to the consumer of the plugin is that there is a new option ('resources') and there is a new property on the `eventObject` named `resourceId` that we use to tie back to the relevant resource.
