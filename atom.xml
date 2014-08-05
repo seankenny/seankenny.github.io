@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-04T14:14:43+01:00</updated>
+  <updated>2014-08-05T17:54:54+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using Git, Npm and Bower Behind a Firewall]]></title>
+    <link href="http://www.seankenny.me/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/"/>
+    <updated>2014-08-05T17:50:53+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall</id>
+    <content type="html"><![CDATA[<blockquote><p>Self-post for me as I have already had to re-learn this 3 times now&hellip;</p></blockquote>
+
+<p>Company firewalls and policies can prevent npm and bower installing correctly.</p>
+
+<h3>Switching protocols</h3>
+
+<p>Some companies will blacklist the git protocol => <code>git://github.com/modulename</code> so we can change this to use http using:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git config --global url.<span class="s2">&quot;http://&quot;</span>.insteadOf git://
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Setting git to use a proxy</h3>
+
+<p>If your company runs a proxy, set git to use it.  Get your proxy from your IE settings.  Set your git config to use the proxy here:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">HTTP_PROXY</span><span class="o">=</span>http://mycompanyproxy:port
+</span><span class='line'><span class="nb">export </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://mycompanyproxy:port
+</span><span class='line'>
+</span><span class='line'>git config --global http.proxy http://mycompanyproxy:port
+</span><span class='line'>git config --global https.proxy http://mycompanyproxy:port
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bower will need futher updates as it uses lower case settings on the env variables:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">http_proxy</span><span class="o">=</span>http://mycompanyproxy:port
+</span><span class='line'><span class="nb">export </span><span class="nv">https_proxy</span><span class="o">=</span>http://mycompanyproxy:port
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Custom OWIN IClaimsPrincipal With Ninject]]></title>
@@ -1988,68 +2034,6 @@ npm - ERR! SyntaxError: Unexpected token &lt;
 <p>And that should be that.</p>
 
 <p>Note the page should be resized to ensure that scrollbars are visible otherwise this will not work as the user needs to scroll in order for the next page call to work.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Something I Learned Today – Declaritive Authorization]]></title>
-    <link href="http://www.seankenny.me/blog/2012/01/11/something-i-learned-today-declaritive-authorization/"/>
-    <updated>2012-01-11T18:53:00+00:00</updated>
-    <id>http://www.seankenny.me/blog/2012/01/11/something-i-learned-today-declaritive-authorization</id>
-    <content type="html"><![CDATA[<p>Well not exactly true.  We’ve been using this great gem for a while now on our first venture into Ruby on Rails.</p>
-
-<p>Ryan Bates over at RailsCasts has a great session on the topic.  We implemented the basic vanilla version on our RESTful controller actions and models and everything seemed to run fine after making a few tweaks.</p>
-
-<!--more-->
-
-
-<p>Then a funny thing happened.  One of the guys ran the db:migrate on a fresh database and when he tried to access a page that had an AJAX call on it, the ajax failed.  Looking at the console, we got an ActiveRecord exception.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Resource</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="sb">`resources`</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="sb">`resources`</span> <span class="no">WHERE</span> <span class="p">(</span><span class="sb">`resources`</span><span class="o">.</span><span class="n">`</span><span class="nb">id</span><span class="sb">` = 1) LIMIT 1</span>
-</span><span class='line'><span class="sb">ActiveRecord::RecordNotFound (Couldn&#39;t find Resource without an ID):</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The funny thing was that the action being accessed did not call anything relating to the Resource model.  It’s an Ajax/JSON action just for a dropdown filter on the page.</p>
-
-<p>It took a while to figure and it boiled down to RTFM!  Declaritive Authorizaton will always load up the model for each action in your locked down controller in order to figure out if the thread has access.  News to me although it does mean that we were able to remove all the model finds, etc., in our RESTful actions show, new, edit..).</p>
-
-<p>To fix this particular issue, all that is required is to tell create a dummy model prior to DA kicking in.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Admin</span><span class="o">::</span><span class="no">ResourcesController</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="no">Admin</span><span class="o">::</span><span class="no">BaseController</span>
-</span><span class='line'>  <span class="n">before_filter</span> <span class="ss">:new_resource</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:for_resource_type_id</span>
-</span><span class='line'>  <span class="n">filter_resource_access</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">for_resource_type_id</span>
-</span><span class='line'>    <span class="vi">@resourcegroups</span> <span class="o">=</span> <span class="no">ResourceGroup</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s1">&#39;resource_type_id = ?&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">render</span> <span class="ss">:json</span> <span class="o">=&gt;</span> <span class="vi">@resourcegroups</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">new_resource</span>
-</span><span class='line'>    <span class="vi">@resource</span> <span class="o">=</span> <span class="no">Resource</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Easy when you know how.</p>
 ]]></content>
   </entry>
   

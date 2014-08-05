@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="Having recently started using OWIN to handle authorization, I&rsquo;ve had to change a few things throughout my web api projects. To have the user& &hellip;">
+  <meta name="description" content="Self-post for me as I have already had to re-learn this 3 times now&hellip; Company firewalls and policies can prevent npm and bower installing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/">Using Git, Npm and Bower Behind a Firewall</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-05T17:50:53+01:00" pubdate data-updated="true">05 Aug 2014</time>
+ • <a href="/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>Self-post for me as I have already had to re-learn this 3 times now&hellip;</p></blockquote>
+
+<p>Company firewalls and policies can prevent npm and bower installing correctly.</p>
+
+<h3>Switching protocols</h3>
+
+<p>Some companies will blacklist the git protocol => <code>git://github.com/modulename</code> so we can change this to use http using:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git config --global url.<span class="s2">&quot;http://&quot;</span>.insteadOf git://
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Setting git to use a proxy</h3>
+
+<p>If your company runs a proxy, set git to use it.  Get your proxy from your IE settings.  Set your git config to use the proxy here:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">HTTP_PROXY</span><span class="o">=</span>http://mycompanyproxy:port
+</span><span class='line'><span class="nb">export </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://mycompanyproxy:port
+</span><span class='line'>
+</span><span class='line'>git config --global http.proxy http://mycompanyproxy:port
+</span><span class='line'>git config --global https.proxy http://mycompanyproxy:port
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bower will need futher updates as it uses lower case settings on the env variables:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">http_proxy</span><span class="o">=</span>http://mycompanyproxy:port
+</span><span class='line'><span class="nb">export </span><span class="nv">https_proxy</span><span class="o">=</span>http://mycompanyproxy:port
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -521,51 +596,6 @@
 
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/02/angularjs-formsauthentication-in-net-land/">AngularJS FormsAuthentication in .Net Land</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-02T18:31:00+01:00" pubdate data-updated="true">02 Oct 2013</time>
- • <a href="/blog/2013/10/02/angularjs-formsauthentication-in-net-land/">permalink</a>
-  
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are a number of ways to authenticate an angularJS application.  This is the one I am currently using.  It uses a <code>FormsAuthentication</code> cookie in the same way as a regular ASP.Net WebForms/MVC app would.</p>
-
-<p>The structure is basically Web Api, a single MVC home controller with an Index.cshtml and angular.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/02/angularjs-formsauthentication-in-net-land/">Read on &rarr;</a>
-    </footer>
   
 
 
