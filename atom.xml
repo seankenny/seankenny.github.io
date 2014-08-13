@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-13T18:10:53+01:00</updated>
+  <updated>2014-08-13T18:13:47+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -23,6 +23,9 @@
 <p>I&rsquo;ve finally got to updating my fork of Adam Shaw&rsquo;s v2.0.2 <a href="http://arshaw.com/fullcalendar/" target="_blank">Full Calendar</a>.</p>
 
 <p>There are a few changes required if you are going to move from the previous 1.6 version, namely the use of the <a href="http://momentjs.com/" target="_blank">moment.js</a> date library.  I&rsquo;ve used this library previously and you owe it to yourself to take a look.  It takes all that javascript date pain away.</p>
+
+<!--more-->
+
 
 <p>The ResourceDayView I&rsquo;ve added is pretty much a clone of the AgendaDayView so head on over to <a href="http://arshaw.com/fullcalendar/docs/" target="_blank">arshaw.com/fullcalendar/docs</a> to get a feel for the agenda view.</p>
 
@@ -58,6 +61,9 @@
     <content type="html"><![CDATA[<blockquote><p>Self-post for me as I have already had to re-learn this 3 times now&hellip;</p></blockquote>
 
 <p>Company firewalls and policies can prevent npm and bower installing correctly.</p>
+
+<!--more-->
+
 
 <h3>Switching protocols</h3>
 
