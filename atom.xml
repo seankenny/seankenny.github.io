@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-13T18:13:47+01:00</updated>
+  <updated>2014-08-13T18:15:05+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -22,7 +22,7 @@
 
 <p>I&rsquo;ve finally got to updating my fork of Adam Shaw&rsquo;s v2.0.2 <a href="http://arshaw.com/fullcalendar/" target="_blank">Full Calendar</a>.</p>
 
-<p>There are a few changes required if you are going to move from the previous 1.6 version, namely the use of the <a href="http://momentjs.com/" target="_blank">moment.js</a> date library.  I&rsquo;ve used this library previously and you owe it to yourself to take a look.  It takes all that javascript date pain away.</p>
+<p>There are a few changes required if you are going to move from the previous 1.6 version, namely the use of the <a href="http://momentjs.com/" target="_blank">moment.js</a> date library.  I&rsquo;ve used this library previously and you owe it to yourself to take a look.  It takes all that javascript date pain away.  And that&rsquo;s a good thing&hellip;</p>
 
 <!--more-->
 
