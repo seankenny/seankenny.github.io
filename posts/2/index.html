@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="There are a number of ways to authenticate an angularJS application. This is the one I am currently using. It uses a FormsAuthentication cookie in &hellip;">
+  <meta name="description" content="I prefer JSON camel cased. The default setup in ASP.net Web Api using the Newtonsoft JsonSerializer is for Pascal Case. To switch to camel case is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/05/camelcasejson/">CamelCaseJson</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-05T10:49:00+00:00" pubdate data-updated="true">05 Jan 2014</time>
+ • <a href="/blog/2014/01/05/camelcasejson/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I prefer JSON camel cased.  The default setup in ASP.net Web Api using the Newtonsoft JsonSerializer is for Pascal Case.  To switch to camel case is easy and makes for a much more seamless angularJS and Web Api interaction.  In the WebAPiConfig class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="kt">var</span> <span class="n">jsonFormatter</span> <span class="p">=</span> <span class="n">GlobalConfiguration</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">;</span>
+</span><span class='line'><span class="n">jsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">ContractResolver</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CamelCasePropertyNamesContractResolver</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -524,53 +569,6 @@ npm - ERR! SyntaxError: Unexpected token &lt;
   
     <footer>
       <a rel="full-article" href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/11/infinite-scrolling-with-jquery/">Infinite Scrolling With JQuery</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-11T18:52:00+01:00" pubdate data-updated="true">11 May 2012</time>
- • <a href="/blog/2012/05/11/infinite-scrolling-with-jquery/">permalink</a>
-  
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Recently I was asked to include an infinite scroll for a client’s twitter account on their homepage.  I was surprised at how easy it turns out to be.</p>
-
-<p>In a nutshell, it consists of:</p>
-
-<p>Use AJAX to hit Twitter’s timeline API to get the tweets</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/11/infinite-scrolling-with-jquery/">Read on &rarr;</a>
     </footer>
   
 

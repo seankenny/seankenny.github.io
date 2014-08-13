@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2/</loc>
+    <lastmod>2014-08-11T18:52:44+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://www.seankenny.me/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/</loc>
     <lastmod>2014-08-05T17:50:53+01:00</lastmod>
     <priority>0.8</priority>
@@ -137,14 +143,14 @@
   
   <url>
     <loc>http://www.seankenny.me/blog/archives/</loc>
-    <lastmod>2014-08-05T17:56:43+01:00</lastmod>
+    <lastmod>2014-08-13T18:10:53+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://www.seankenny.me/</loc>
-    <lastmod>2014-08-05T17:56:43+01:00</lastmod>
+    <lastmod>2014-08-13T18:10:53+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

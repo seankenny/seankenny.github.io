@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Using Git, Npm and Bower Behind a Firewall - Sean Kenny</title>
+  <title>FullCalendar - With a Resource Day View! - V2-0-2 - Sean Kenny</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="Self-post for me as I have already had to re-learn this 3 times now&hellip; Company firewalls and policies can prevent npm and bower installing &hellip;">
+  <meta name="description" content="v2.0.2 beta! I&rsquo;ve finally got to updating my fork of Adam Shaw&rsquo;s v2.0.2 Full Calendar. There are a few changes required if you are going &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.seankenny.me/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall">
+  <link rel="canonical" href="http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Sean Kenny" type="application/atom+xml">
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">Using Git, Npm and Bower Behind a Firewall</h1>
+      <h1 class="entry-title">FullCalendar - With a Resource Day View! - V2-0-2</h1>
     
     
       <p class="meta">
@@ -94,7 +94,7 @@
   
 
 
-<time datetime="2014-08-05T17:50:53+01:00" pubdate data-updated="true">05 Aug 2014</time>
+<time datetime="2014-08-11T18:52:44+01:00" pubdate data-updated="true">11 Aug 2014</time>
  • <a href="">permalink</a>
   
         
@@ -103,44 +103,35 @@
   </header>
 
 
-<div class="entry-content"><blockquote><p>Self-post for me as I have already had to re-learn this 3 times now&hellip;</p></blockquote>
+<div class="entry-content"><h3>v2.0.2 <code>beta!</code></h3>
 
-<p>Company firewalls and policies can prevent npm and bower installing correctly.</p>
+<p>I&rsquo;ve finally got to updating my fork of Adam Shaw&rsquo;s v2.0.2 <a href="http://arshaw.com/fullcalendar/" target="_blank">Full Calendar</a>.</p>
 
-<h3>Switching protocols</h3>
+<p>There are a few changes required if you are going to move from the previous 1.6 version, namely the use of the <a href="http://momentjs.com/" target="_blank">moment.js</a> date library.  I&rsquo;ve used this library previously and you owe it to yourself to take a look.  It takes all that javascript date pain away.</p>
 
-<p>Some companies will blacklist the git protocol => <code>git://github.com/modulename</code> so we can change this to use http using:</p>
+<p>The ResourceDayView I&rsquo;ve added is pretty much a clone of the AgendaDayView so head on over to <a href="http://arshaw.com/fullcalendar/docs/" target="_blank">arshaw.com/fullcalendar/docs</a> to get a feel for the agenda view.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git config --global url.<span class="s2">&quot;http://&quot;</span>.insteadOf git://
-</span></code></pre></td></tr></table></div></figure>
+<p>The <a href="https://github.com/arshaw/fullcalendar/wiki/Upgrading-to-v2" target="_blank">upgrade to v2</a> docs cover the diffs in detail.</p>
 
+<h3>Demo</h3>
 
-<h3>Setting git to use a proxy</h3>
+<p>Take a look at the plunkr demo <a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21/preview" target="_blank">here</a>.</p>
 
-<p>If your company runs a proxy, set git to use it.  Get your proxy from your IE settings.  Set your git config to use the proxy here:</p>
+<p>In the demo, pop open the developer tools (F12 in chrome) => console and you should see a console log for clicking on events, dragging events, etc.</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">HTTP_PROXY</span><span class="o">=</span>http://mycompanyproxy:port
-</span><span class='line'><span class="nb">export </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://mycompanyproxy:port
-</span><span class='line'>
-</span><span class='line'>git config --global http.proxy http://mycompanyproxy:port
-</span><span class='line'>git config --global https.proxy http://mycompanyproxy:port
-</span></code></pre></td></tr></table></div></figure>
+<h3>Issues</h3>
 
+<p>If you spot any issues, please submit a <a href="https://github.com/seankenny/fullcalendar/issues" target="_blank">github issue</a> with a label of v2.0!</p>
 
-<p>Bower will need futher updates as it uses lower case settings on the env variables:</p>
+<h3>v2.1</h3>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">http_proxy</span><span class="o">=</span>http://mycompanyproxy:port
-</span><span class='line'><span class="nb">export </span><span class="nv">https_proxy</span><span class="o">=</span>http://mycompanyproxy:port
-</span></code></pre></td></tr></table></div></figure>
+<p>I see there is a v2.1 release imminent &#42;<em>le sigh</em>&#42;.  It is still in beta and there are a SHED LOAD of internal changes so as soon as it is released I&rsquo;ll start the merge process again.</p>
 
+<h3>Related posts</h3>
+
+<blockquote><p><a href="http://www.seankenny.me/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">FullCalendar &ndash; With a Resource Day View!</a></p>
+
+<p><a href="http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/">Resource FullCalendar &ndash; Dragging and Clicking</a></p></blockquote>
 </div>
 
 
@@ -163,14 +154,14 @@
   
 
 
-<time datetime="2014-08-05T17:50:53+01:00" pubdate data-updated="true">05 Aug 2014</time>
+<time datetime="2014-08-11T18:52:44+01:00" pubdate data-updated="true">11 Aug 2014</time>
  • <a href="">permalink</a>
   
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/bower/'>bower</a>, <a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
+    <a class='category' href='/blog/categories/fullcalendar/'>fullcalendar</a>
   
 </span>
 
@@ -186,10 +177,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/07/25/custom-owin-iclaimsprincipal-with-ninject/" title="Previous Post: Custom OWIN IClaimsPrincipal with Ninject">&laquo; Custom OWIN IClaimsPrincipal with Ninject</a>
+        <a class="basic-alignment left" href="/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/" title="Previous Post: Using git, npm and bower behind a firewall">&laquo; Using git, npm and bower behind a firewall</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2/" title="Next Post: FullCalendar - With a Resource Day View! - v2-0-2">FullCalendar - With a Resource Day View! - v2-0-2 &raquo;</a>
       
     </p>
   </footer>
@@ -225,8 +214,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://www.seankenny.me/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/';
-        var disqus_url = 'http://www.seankenny.me/blog/2014/08/05/using-git-npm-and-bower-behind-a-firewall/';
+        var disqus_identifier = 'http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2/';
+        var disqus_url = 'http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2/';
         var disqus_script = 'embed.js';
       
     (function () {

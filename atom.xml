@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-05T17:56:43+01:00</updated>
+  <updated>2014-08-13T18:10:53+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[FullCalendar - With a Resource Day View! - V2-0-2]]></title>
+    <link href="http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2/"/>
+    <updated>2014-08-11T18:52:44+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2</id>
+    <content type="html"><![CDATA[<h3>v2.0.2 <code>beta!</code></h3>
+
+<p>I&rsquo;ve finally got to updating my fork of Adam Shaw&rsquo;s v2.0.2 <a href="http://arshaw.com/fullcalendar/" target="_blank">Full Calendar</a>.</p>
+
+<p>There are a few changes required if you are going to move from the previous 1.6 version, namely the use of the <a href="http://momentjs.com/" target="_blank">moment.js</a> date library.  I&rsquo;ve used this library previously and you owe it to yourself to take a look.  It takes all that javascript date pain away.</p>
+
+<p>The ResourceDayView I&rsquo;ve added is pretty much a clone of the AgendaDayView so head on over to <a href="http://arshaw.com/fullcalendar/docs/" target="_blank">arshaw.com/fullcalendar/docs</a> to get a feel for the agenda view.</p>
+
+<p>The <a href="https://github.com/arshaw/fullcalendar/wiki/Upgrading-to-v2" target="_blank">upgrade to v2</a> docs cover the diffs in detail.</p>
+
+<h3>Demo</h3>
+
+<p>Take a look at the plunkr demo <a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21/preview" target="_blank">here</a>.</p>
+
+<p>In the demo, pop open the developer tools (F12 in chrome) => console and you should see a console log for clicking on events, dragging events, etc.</p>
+
+<h3>Issues</h3>
+
+<p>If you spot any issues, please submit a <a href="https://github.com/seankenny/fullcalendar/issues" target="_blank">github issue</a> with a label of v2.0!</p>
+
+<h3>v2.1</h3>
+
+<p>I see there is a v2.1 release imminent &#42;<em>le sigh</em>&#42;.  It is still in beta and there are a SHED LOAD of internal changes so as soon as it is released I&rsquo;ll start the merge process again.</p>
+
+<h3>Related posts</h3>
+
+<blockquote><p><a href="http://www.seankenny.me/blog/2013/08/14/fullcalendar-with-a-resource-day-view/">FullCalendar &ndash; With a Resource Day View!</a></p>
+
+<p><a href="http://www.seankenny.me/blog/2014/07/24/resource-fullcalendar-dragging-and-clicking/">Resource FullCalendar &ndash; Dragging and Clicking</a></p></blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using Git, Npm and Bower Behind a Firewall]]></title>
@@ -1910,130 +1947,6 @@ npm - ERR! SyntaxError: Unexpected token &lt;
 <p>While what we did is pretty hacky, it gets us out of a bind.  10+ developers can now get back to work and, until MS resolve the issue, at least we have a ‘resolution’.</p>
 
 <p>EDIT &ndash; and they have.  The designer now utilises a resx file to store the hash.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Infinite Scrolling With JQuery]]></title>
-    <link href="http://www.seankenny.me/blog/2012/05/11/infinite-scrolling-with-jquery/"/>
-    <updated>2012-05-11T18:52:00+01:00</updated>
-    <id>http://www.seankenny.me/blog/2012/05/11/infinite-scrolling-with-jquery</id>
-    <content type="html"><![CDATA[<p>Recently I was asked to include an infinite scroll for a client’s twitter account on their homepage.  I was surprised at how easy it turns out to be.</p>
-
-<p>In a nutshell, it consists of:</p>
-
-<p>Use AJAX to hit Twitter’s timeline API to get the tweets</p>
-
-<!--more-->
-
-
-<p>Use JQuery to detect when the user is scrolling</p>
-
-<p>Use a little bit of maths to figure out when to trigger another page of tweets</p>
-
-<p>First, we add a link to grab JQuery from the Google CDN.</p>
-
-<p>Next, add in placeholders for the tweets</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;body&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&#39;tweets&#39;</span><span class="nt">&gt;&lt;/ul&gt;</span>
-</span><span class='line'><span class="nt">&lt;/body&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now the call to get the tweets from Twitter and add them as items to our list (I’m using Stephen Fry as the test subject as he tweets LOADS):</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-</span><span class='line'>  <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;http://api.twitter.com/1/statuses/user_timeline.json&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;stephenfry&#39;</span>
-</span><span class='line'>    <span class="nx">skip_user</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">page</span><span class="o">:</span> <span class="nx">pageNumber</span>
-</span><span class='line'>  <span class="p">},</span>
-</span><span class='line'>  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nx">response</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tweets&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;&#39;</span> <span class="o">+</span> <span class="nx">response</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">text</span> <span class="o">+</span> <span class="s1">&#39;&lt;/li&gt;&#39;</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Note that we are passing in the page number.  This is important for the next few bits.</p>
-
-<p>Now we add the JQuery to load the page on opening.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nx">getPagedTweets</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>For the infinite scroll, we need to do a few things.  First, we need to be able to pass the next page to Twitter’s API so we need a mechanism to store it.  We can use a HTML5 data item to do this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;tweets&quot;</span> <span class="na">data-nextpage=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;&lt;/ul&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Next, we need a nextPage function to get and set this value as well as call the getPagedTweets function we already have:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">nextPage</span><span class="p">(){</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">pageNumber</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tweets&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;data-nextpage&#39;</span><span class="p">));</span>
-</span><span class='line'>  <span class="nx">getPagedTweets</span><span class="p">(</span><span class="nx">pageNumber</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tweets&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;data-nextpage&#39;</span><span class="p">,</span> <span class="nx">pageNumber</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Finally, we need the JQuery to trigger an event when the user scrolls to the bottom of the page:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nx">getPagedTweets</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scroll</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">scrollTop</span><span class="p">()</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">height</span><span class="p">()</span> <span class="o">-</span> <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">height</span><span class="p">()){</span>
-</span><span class='line'>      <span class="nx">nextPage</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">};</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And that should be that.</p>
-
-<p>Note the page should be resized to ensure that scrollbars are visible otherwise this will not work as the user needs to scroll in order for the next page call to work.</p>
 ]]></content>
   </entry>
   
