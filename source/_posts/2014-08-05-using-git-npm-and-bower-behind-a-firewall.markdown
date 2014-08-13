@@ -8,7 +8,7 @@ categories: [git, bower, npm]
 > Self-post for me as I have already had to re-learn this 3 times now...
 
 Company firewalls and policies can prevent npm and bower installing correctly.
-
+<!--more-->
 ###Switching protocols
 Some companies will blacklist the git protocol => `git://github.com/modulename` so we can change this to use http using:
 
