@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "FullCalendar - With a Resource Day View! - v2-0-2"
+title: "FullCalendar - With a Resource Day View! - v2"
 date: 2014-08-11 18:52:44 +0100
 comments: true
 categories: [FullCalendar]
 ---
-###v2.0.2 `beta!`
+###v2.0.2
 I've finally got to updating my fork of Adam Shaw's v2.0.2 <a href="http://arshaw.com/fullcalendar/" target="_blank">Full Calendar</a>.  
 
 There are a few changes required if you are going to move from the previous 1.6 version, namely the use of the <a href="http://momentjs.com/" target="_blank">moment.js</a> date library.  I've used this library previously and you owe it to yourself to take a look.  It takes all that javascript date pain away.  And that's a good thing...

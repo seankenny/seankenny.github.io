@@ -17,7 +17,7 @@ So I went ahead and forked the source on github.  The goal was to keep the forke
 [Here](http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview) is a working demo of the plugin with resources.
 
 ###Code
-The source code of it is [here](https://github.com/seankenny/fullcalendar).  Get the js and css from here - [https://github.com/seankenny/fullcalendar/tree/master/build/out](https://github.com/seankenny/fullcalendar/tree/master/build/out).
+The source code of it is [here](https://github.com/seankenny/fullcalendar).  Get the V2 js and css from here - [https://github.com/seankenny/fullcalendar/tree/v2/dist](https://github.com/seankenny/fullcalendar/tree/v2/dist).
 
 ###Usage
 The only difference to the consumer of the plugin is that there is a new option ('resources') and there is a new property on the `eventObject` named `resourceId` that we use to tie back to the relevant resource.
