@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Fullcalendar | Sean Kenny]]></title>
   <link href="http://www.seankenny.me/blog/categories/fullcalendar/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-31T16:29:00+01:00</updated>
+  <updated>2014-08-31T16:52:43+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -33,7 +33,7 @@
 
 <h3>Demo</h3>
 
-<p>Take a look at the plunkr demo <a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21/preview" target="_blank">here</a>.</p>
+<p>Take a look at the plunkr demo <a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21" target="_blank">here</a>.</p>
 
 <p>In the demo, pop open the developer tools (F12 in chrome) => console and you should see a console log for clicking on events, dragging events, etc.</p>
 
@@ -181,21 +181,23 @@ eventDrop: function (event, delta, revertFunc) {
 
 <h3>Demo</h3>
 
-<p><a href="http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview">Here</a> is a working demo of the plugin with resources.</p>
+<p><a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21" target="_blank">Here</a> is a working demo of the plugin with resources.</p>
 
 <h3>Code</h3>
 
-<p>The source code of it is <a href="https://github.com/seankenny/fullcalendar">here</a>.  Get the V2 js and css from here &ndash; <a href="https://github.com/seankenny/fullcalendar/tree/v2/dist">https://github.com/seankenny/fullcalendar/tree/v2/dist</a>.</p>
+<p>The source code of it is <a href="https://github.com/seankenny/fullcalendar" target="_blank">here</a>.  Get the V2 js and css from here &ndash; <a href="https://github.com/seankenny/fullcalendar/tree/v2/dist" target="_blank"><a href="https://github.com/seankenny/fullcalendar/tree/v2/dist">https://github.com/seankenny/fullcalendar/tree/v2/dist</a></a>.</p>
 
 <h3>Usage</h3>
 
-<p>The only difference to the consumer of the plugin is that there is a new option (&lsquo;resources&rsquo;) and there is a new property on the <code>eventObject</code> named <code>resourceId</code> that we use to tie back to the relevant resource.</p>
+<p>The only difference to the consumer of the plugin is that there is a new option (&lsquo;resources&rsquo;) and there is a new property on the <code>eventObject</code> named <code>resources</code> that we use to tie back to the relevant resource using the id.</p>
+
+<p>The resources option can contain either the resources objets or a url that will return a JSON array.</p>
 
 <p>```javascript
 $(&lsquo;#calendar&rsquo;).fullCalendar({
   defaultView: &lsquo;resourceDay&rsquo;,
   resources: [{&lsquo;id&rsquo;:&lsquo;r1&rsquo;,&lsquo;name&rsquo;:&lsquo;Resource 1&rsquo;},{&lsquo;id&rsquo;:&lsquo;r2&rsquo;, &lsquo;name&rsquo;:&lsquo;Resource 2&rsquo;}],
-  //resources: &lsquo;data-url&rsquo;  //you can use just a url to your resources data if you want
+  //resources: &lsquo;<a href="https://data-url">https://data-url</a>&rsquo;  //you can use just a url to your resources data if you want
   events: [
   {</p>
 
