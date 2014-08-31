@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-13T18:15:05+01:00</updated>
+  <updated>2014-08-31T16:27:27+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -18,7 +18,7 @@
     <link href="http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2/"/>
     <updated>2014-08-11T18:52:44+01:00</updated>
     <id>http://www.seankenny.me/blog/2014/08/11/fullcalendar-with-a-resource-day-view-v2-0-2</id>
-    <content type="html"><![CDATA[<h3>v2.0.2 <code>beta!</code></h3>
+    <content type="html"><![CDATA[<h3>v2.0.2</h3>
 
 <p>I&rsquo;ve finally got to updating my fork of Adam Shaw&rsquo;s v2.0.2 <a href="http://arshaw.com/fullcalendar/" target="_blank">Full Calendar</a>.</p>
 
@@ -1401,7 +1401,7 @@ Now angularjs starts up.  Usually the first thing an angular controller will do 
 
 <h3>Code</h3>
 
-<p>The source code of it is <a href="https://github.com/seankenny/fullcalendar">here</a>.  Get the js and css from here &ndash; <a href="https://github.com/seankenny/fullcalendar/tree/master/build/out">https://github.com/seankenny/fullcalendar/tree/master/build/out</a>.</p>
+<p>The source code of it is <a href="https://github.com/seankenny/fullcalendar">here</a>.  Get the V2 js and css from here &ndash; <a href="https://github.com/seankenny/fullcalendar/tree/v2/dist">https://github.com/seankenny/fullcalendar/tree/v2/dist</a>.</p>
 
 <h3>Usage</h3>
 
