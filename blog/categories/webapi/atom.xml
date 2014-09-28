@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Webapi | Sean Kenny]]></title>
   <link href="http://www.seankenny.me/blog/categories/webapi/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-09-28T08:58:03+01:00</updated>
+  <updated>2014-09-28T08:58:40+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -28,12 +28,12 @@
 
 <p>Can we automatically prepend <code>")]}',\n"</code> in Web Api?  Sure!</p>
 
+<!--more-->
+
+
 <h3>The code</h3>
 
 <p>I&rsquo;m going to create a custom JsonConverter by extending the Newtonsoft one that web api uses out of the box:</p>
-
-<!--more-->
-
 
 <p>```c#
 public class AngularArrayConverter : JsonConverter
