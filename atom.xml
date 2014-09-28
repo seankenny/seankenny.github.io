@@ -4,7 +4,7 @@
   <title><![CDATA[Sean Kenny]]></title>
   <link href="http://www.seankenny.me/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-31T16:52:43+01:00</updated>
+  <updated>2014-09-28T08:57:17+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,142 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api and AngularJS - JSON Vulnerability Protection Filter]]></title>
+    <link href="http://www.seankenny.me/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter/"/>
+    <updated>2014-09-28T08:50:48+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter</id>
+    <content type="html"><![CDATA[<h3>The Issue</h3>
+
+<p>From the AngularJS <a href="https://docs.angularjs.org/api/ng/service/$http#json-vulnerability-protection" target="_blank">documentation</a></p>
+
+<blockquote><p>A JSON vulnerability allows third party website to turn your JSON resource URL into JSONP request under some conditions. To counter this your server can prefix all JSON requests with following string &ldquo;)]}&lsquo;,\n&rdquo;. Angular will automatically strip the prefix before processing it as JSON.</p></blockquote>
+
+<p>Phil Haack outlines the issue <a href="http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/" target="_blank">here</a>.</p>
+
+<p>Can we automatically prepend <code>")]}',\n"</code> in Web Api?  Sure!</p>
+
+<h3>The code</h3>
+
+<p>I&rsquo;m going to create a custom JsonConverter by extending the Newtonsoft one that web api uses out of the box:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AngularArrayConverter</span> <span class="p">:</span> <span class="n">JsonConverter</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">WriteJson</span><span class="p">(</span><span class="n">JsonWriter</span> <span class="n">writer</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">,</span> <span class="n">JsonSerializer</span> <span class="n">serializer</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">writer</span><span class="p">.</span><span class="n">WriteRawValue</span><span class="p">(</span><span class="s">&quot;)]}&#39;,\n&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">writer</span><span class="p">.</span><span class="n">WriteStartArray</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">var</span> <span class="n">items</span> <span class="p">=</span> <span class="k">value</span> <span class="k">as</span> <span class="n">IEnumerable</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">items</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">serializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">item</span><span class="p">.</span><span class="n">GetType</span><span class="p">());</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">writer</span><span class="p">.</span><span class="n">WriteEndArray</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="kt">object</span> <span class="nf">ReadJson</span><span class="p">(</span><span class="n">JsonReader</span> <span class="n">reader</span><span class="p">,</span> <span class="n">Type</span> <span class="n">objectType</span><span class="p">,</span> <span class="kt">object</span> <span class="n">existingValue</span><span class="p">,</span> <span class="n">JsonSerializer</span> <span class="n">serializer</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">CanConvert</span><span class="p">(</span><span class="n">Type</span> <span class="n">objectType</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// string is an IEnumerable.  This will ensure this converter is only used for arrays</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">!(</span><span class="n">objectType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">))</span> <span class="p">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="n">IEnumerable</span><span class="p">).</span><span class="n">IsAssignableFrom</span><span class="p">(</span><span class="n">objectType</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="n">CanRead</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">get</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then just plug it in using the WebApiConfig.cs class:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Register</span><span class="p">(</span><span class="n">HttpConfiguration</span> <span class="n">config</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// other config stuff here</span>
+</span><span class='line'>    <span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">Converters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">AngularArrayConverter</span><span class="p">());</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now using fiddler or wireshark we can see the results:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">)]}</span><span class="err">&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sean&quot;</span><span class="p">},{</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Mike&quot;</span><span class="p">}]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>AngularJS will handle this automagically as per their documentation.</p>
+
+<p>HTH someone.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[FullCalendar - With a Resource Day View! - V2]]></title>
@@ -1877,84 +2013,6 @@ npm - ERR! SyntaxError: Unexpected token &lt;
 
 
 <p>Adding <code>[assembly: InternalsVisibleTo("MyTestProject")]</code> attribute on the web project <code>AssemblyInfo.cs</code> class (in the <code>Properties</code> folder) will allow our test to access the <code>JsonResult.Data</code> anonymous type.  Re-run the test and all green.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Entity Framework Migrations - No Logical Space Left to Create More User Strings]]></title>
-    <link href="http://www.seankenny.me/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/"/>
-    <updated>2012-07-15T18:41:00+01:00</updated>
-    <id>http://www.seankenny.me/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings</id>
-    <content type="html"><![CDATA[<p>Yesterday we started seeing a compile time exception:</p>
-
-<pre><code>Unexpected error writing metadata to file 'e:\….\obj\Release\…Repository.EntityFramework.dll'
--- 'No logical space left to create more user strings'
-</code></pre>
-
-<p>As it turns out, this related to us having too many migration scripts, in our case, > 90.</p>
-
-<!--more-->
-
-
-<p>The problem is that each time we generate a new script, a snapshot of the model schema is hashed into the migration designer IMigrationMetadata.Target property.</p>
-
-<p>As we have a lot of developers working on the solution, we reached the limit pretty quickly.  I believe MS know about this issue and are talking about trying to resolve in EF6.</p>
-
-<p>How to resolve?  Well we could use resx files as was outlined here but, for us, this is a non runner for various reasons.  Instead we have had to re-baseline the migration scripts.  Not ideal but that’s what we came up with.</p>
-
-<h2>Environments</h2>
-
-<p>We have them in abundance.  Developer local, CI, Test, Stage, Stage Integration, Production.  Each one is in a different state so what to do?</p>
-
-<p>We checked all the environments and looked at the __MigrationHistory table to see the latest script that was common to all.  Then we went to the script prior to that.  That’s our baseline target.</p>
-
-<p>Create the baseline</p>
-
-<p>Next, as we have seeded data in our app, we need to get this data in a usable format.  We rolled back a dev machine to the change set related to our baseline target script.  Dump the local database, then recreate.  Next in SQL Management Studio, right click the database and Tasks –> generate scripts.  Select the Advanced option and set ‘Types of Data to Script’ to Data only.  This will generate a bunch of INSERT statements.</p>
-
-<p>Drop the local database again.</p>
-
-<p>Back in the project, delete all the migration script files.  Add-Migration a new baseline one.  This will create the schema for you.  Add the insert statements as Sql(“INSERT….”); in your script.  We have quite a crude mechanism to prevent any of this script running in on any non-debug environment:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="cp">#if !DEBUG </span>
-</span><span class='line'>  <span class="k">return</span><span class="p">;</span>
-</span><span class='line'><span class="cp">#endif</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Hey, it works for us!</p>
-
-<p>We then tweaked the timestamp in the name of the script and also in the <code>IMigrationMetadata.Id</code> property of the designer to a little after the target baseline script.  This keeps it looking correct.</p>
-
-<p>Finally, get latest from source control (remember, we were at the change set of the target baseline script up to now).</p>
-
-<h2>Deploy</h2>
-
-<p>When we deployed and the migrations kicked in, it ran our new baseline script (which does nothing as we have our  #if !DEBUG in there). But the application fails with:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Unable</span> <span class="n">to</span> <span class="n">update</span> <span class="n">database</span> <span class="n">to</span> <span class="n">match</span> <span class="n">the</span> <span class="n">current</span> <span class="n">model</span> <span class="n">because</span> <span class="n">there</span> <span class="n">are</span> <span class="n">pending</span> <span class="n">changes</span> <span class="n">and</span> <span class="n">automatic</span>
-</span><span class='line'><span class="n">migration</span> <span class="k">is</span> <span class="n">disabled</span><span class="p">.</span> <span class="n">Either</span> <span class="n">write</span> <span class="n">the</span> <span class="n">pending</span> <span class="n">model</span> <span class="n">changes</span> <span class="n">to</span> <span class="n">a</span> <span class="n">code</span><span class="p">-</span><span class="n">based</span> <span class="n">migration</span> <span class="n">or</span> <span class="n">enable</span>
-</span><span class='line'><span class="n">automatic</span> <span class="n">migration</span><span class="p">.</span> <span class="n">Set</span> <span class="n">DbMigrationsConfiguration</span><span class="p">.</span><span class="n">AutomaticMigrationsEnabled</span> <span class="n">to</span> <span class="k">true</span> <span class="n">to</span> <span class="n">enable</span>
-</span><span class='line'><span class="n">automatic</span> <span class="n">migration</span><span class="p">.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So another little tweak, this time to the <code>__MigrationHistory</code> table.  Find the entry for the baseline script and change the CreatedOn date to a little after the target baseline script.</p>
-
-<p>All good.</p>
-
-<p>Conclusion</p>
-
-<p>While what we did is pretty hacky, it gets us out of a bind.  10+ developers can now get back to work and, until MS resolve the issue, at least we have a ‘resolution’.</p>
-
-<p>EDIT &ndash; and they have.  The designer now utilises a resx file to store the hash.</p>
 ]]></content>
   </entry>
   

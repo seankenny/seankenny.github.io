@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="I prefer JSON camel cased. The default setup in ASP.net Web Api using the Newtonsoft JsonSerializer is for Pascal Case. To switch to camel case is &hellip;">
+  <meta name="description" content="Ah yes, XSRF. So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/20/angularjs-xsrf-in-net-land/">AngularJS XSRF in .Net Land</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-20T18:31:00+00:00" pubdate data-updated="true">20 Jan 2014</time>
+ • <a href="/blog/2014/01/20/angularjs-xsrf-in-net-land/">permalink</a>
+  
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ah yes, <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">XSRF</a>.</p>
+
+<p>So the basics are we need to ensure that the content of a POST request is coming from our site and has not been intercepted by a ne&#8217;er-do-well.</p>
+
+<p>In ASP.Net MVC it&rsquo;s pretty straighforward.  In your Razor file, just add an <code>Html.AntiForgeryToken()</code> into the form in question and then, on the action, add a <code>[ValidateAntiForgeryToken]</code> filter and all is well.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/20/angularjs-xsrf-in-net-land/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -520,55 +567,6 @@ npm - ERR! SyntaxError: Unexpected token &lt;
   
     <footer>
       <a rel="full-article" href="/blog/2013/05/02/unit-testing-asp-dot-net-mvc-jsonresults/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">Entity Framework Migrations - No Logical Space Left to Create More User Strings</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-15T18:41:00+01:00" pubdate data-updated="true">15 Jul 2012</time>
- • <a href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">permalink</a>
-  
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Yesterday we started seeing a compile time exception:</p>
-
-<pre><code>Unexpected error writing metadata to file 'e:\….\obj\Release\…Repository.EntityFramework.dll'
--- 'No logical space left to create more user strings'
-</code></pre>
-
-<p>As it turns out, this related to us having too many migration scripts, in our case, > 90.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/15/entity-framework-migrations-no-logical-space-left-to-create-more-user-strings/">Read on &rarr;</a>
     </footer>
   
 

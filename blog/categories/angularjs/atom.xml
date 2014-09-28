@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Angularjs | Sean Kenny]]></title>
   <link href="http://www.seankenny.me/blog/categories/angularjs/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-31T16:52:43+01:00</updated>
+  <updated>2014-09-28T08:57:17+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api and AngularJS - JSON Vulnerability Protection Filter]]></title>
+    <link href="http://www.seankenny.me/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter/"/>
+    <updated>2014-09-28T08:50:48+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter</id>
+    <content type="html"><![CDATA[<h3>The Issue</h3>
+
+<p>From the AngularJS <a href="https://docs.angularjs.org/api/ng/service/$http#json-vulnerability-protection" target="_blank">documentation</a></p>
+
+<blockquote><p>A JSON vulnerability allows third party website to turn your JSON resource URL into JSONP request under some conditions. To counter this your server can prefix all JSON requests with following string &ldquo;)]}&lsquo;,\n&rdquo;. Angular will automatically strip the prefix before processing it as JSON.</p></blockquote>
+
+<p>Phil Haack outlines the issue <a href="http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/" target="_blank">here</a>.</p>
+
+<p>Can we automatically prepend <code>")]}',\n"</code> in Web Api?  Sure!</p>
+
+<h3>The code</h3>
+
+<p>I&rsquo;m going to create a custom JsonConverter by extending the Newtonsoft one that web api uses out of the box:</p>
+
+<p>```c#
+public class AngularArrayConverter : JsonConverter
+{</p>
+
+<pre><code>public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+{
+    writer.WriteRawValue(")]}',\n");
+
+    writer.WriteStartArray();
+
+    var items = value as IEnumerable;
+    if (items == null)
+    {
+        return;
+    }
+
+    foreach (var item in items)
+    {
+        serializer.Serialize(writer, item, item.GetType());
+    }
+    writer.WriteEndArray();
+}
+
+public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+{
+    throw new NotImplementedException();
+}
+
+public override bool CanConvert(Type objectType)
+{
+    // string is an IEnumerable.  This will ensure this converter is only used for arrays
+    return !(objectType == typeof(string)) &amp;&amp; typeof(IEnumerable).IsAssignableFrom(objectType);
+}
+
+public override bool CanRead
+{
+    get
+    {
+        return false;
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Then just plug it in using the WebApiConfig.cs class:</p>
+
+<p>```c#
+public static void Register(HttpConfiguration config)
+{</p>
+
+<pre><code>// other config stuff here
+...
+
+config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new AngularArrayConverter());
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Now using fiddler or wireshark we can see the results:</p>
+
+<p><code>javascript
+)]}',
+[{"id":1,"name":"Sean"},{"id":2,"name":"Mike"}]
+</code></p>
+
+<p>AngularJS will handle this automagically as per their documentation.</p>
+
+<p>HTH someone.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Angular Modules - Module Not Found]]></title>
@@ -252,186 +345,6 @@ $httpProvider.defaults.xsrfHeaderName  = 'X-FORM-XSRF';
 var jsonFormatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
 jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[AngularJS FormsAuthentication in .Net Land]]></title>
-    <link href="http://www.seankenny.me/blog/2013/10/02/angularjs-formsauthentication-in-net-land/"/>
-    <updated>2013-10-02T18:31:00+01:00</updated>
-    <id>http://www.seankenny.me/blog/2013/10/02/angularjs-formsauthentication-in-net-land</id>
-    <content type="html"><![CDATA[<p>There are a number of ways to authenticate an angularJS application.  This is the one I am currently using.  It uses a <code>FormsAuthentication</code> cookie in the same way as a regular ASP.Net WebForms/MVC app would.</p>
-
-<p>The structure is basically Web Api, a single MVC home controller with an Index.cshtml and angular.</p>
-
-<!--more-->
-
-
-<p>The HTML sign in form:
-```xml
-<form name="form" novalidate></p>
-
-<pre><code>&lt;input type="text" ng-model="user.userName" /&gt;
-&lt;input type="password" ng-model="user.password" /&gt;
-&lt;input type="submit" value="Sign In" data-ng-click="signin(user)"&gt;
-</code></pre>
-
-<p></form>
-```</p>
-
-<p>Clicking the &lsquo;Sign In&rsquo; calls the Angular Sign In function:</p>
-
-<p>```js
-$scope.signin = function(user) {</p>
-
-<pre><code>$http.post('api/accounts/signin', user)
-    .success(function(data, status, headers, config) {
-        user.authenticated = true;
-        $rootScope.user = user;
-        $location.path('/');
-    })
-    .error(function(data, status, headers, config) {
-        user.authenticated = false;
-        $rootScope.user = {};
-    });
-</code></pre>
-
-<p>};
-```</p>
-
-<p>Which calls the Web Api Accounts Controller
-```c#
-public class AccountsController : ApiController
-{</p>
-
-<pre><code>[HttpPost]
-public HttpResponseMessage SignIn(UserDataModel user)
-{
-    if (this.ModelState.IsValid)
-    {
-        // authenticate the user however you wish to do so here....
-        if (authenticated)
-        {
-            var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
-            FormsAuthentication.SetAuthCookie(user.UserName, false);
-            return response;
-        }
-        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden);
-    }
-    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
-}
-</code></pre>
-
-<p>}</p>
-
-<p>// USER DATAMODEL:
-public class UserDataModel
-{</p>
-
-<pre><code>public string UserName { get; set; }
-public string Password { get; set; }
-</code></pre>
-
-<p>}
-```</p>
-
-<p>Which adds an encrypted cookie to the response.</p>
-
-<p>So now we have a <code>$rootScope.user</code> object that has an <code>authenticated</code> property set to true/false.  This allows us to hide/show menus, etc.  Obviously this can be tampered with so we secure things by locking down any server side code we want to:</p>
-
-<p>```c#
-[Authorize]
-public class AccountsController : ApiController
-{</p>
-
-<pre><code>[HttpPost]
-public HttpResponseMessage SomethingPrivate(UserDataModel user)
-{
-    // this will only be reached if the FromsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>The sign out is:
-```js
-$scope.signin = function(user) {</p>
-
-<pre><code>$http.post('api/accounts/signout').
-    success(function(data, status, headers, config) {
-        localStorageService.clearAll();
-        $rootScope.user = {};
-        $location.path('/');
-    });
-</code></pre>
-
-<p>};
-```</p>
-
-<p>Which calls the Web Api Accounts SignOut Controller Action
-```c#
-public class AccountsController : ApiController
-{</p>
-
-<pre><code>[HttpPost]
-public HttpResponseMessage SignOut(UserDataModel user)
-{
-    if (this.ModelState.IsValid)
-    {
-        var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
-        FormsAuthentication.SignOut();
-
-        return response;
-    }
-    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>This will remove the FormsAuthentication cookie from the user&rsquo;s browser.  The angularjs <code>$rootScope.user</code> will be reset and we are now logged out.</p>
-
-<p>The only other thing to be aware of is when the user refreshed the page, etc.  We need to authomatically &lsquo;sign in&rsquo; the user if the cookie is present.  This is done on our MVC Controller that supplies the Index.cshtml page.</p>
-
-<p>```c#
-public class HomeController : Controller
-{</p>
-
-<pre><code>[HttpPost]
-public ViewResult Index()
-{
-    var dataModel = new BootStrapperDataModel
-    {
-        Authenticated = Request.IsAuthenticated ? "true": "false",
-    };
-
-    if (Request.IsAuthenticated)
-    {
-        dataModel.UserName = Thread.CurrentPrincipal.Identity.Name;
-    }
-
-    return View(dataModel);
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>And the update to the Index.cshtml to update the <code>$rootScope.user</code>:</p>
-
-<p>```html
-@model BootStrapperDataModel</p>
-
-<p><div ng-init="user={authenticated:'@Model.Authenticated',userName:'@Model.UserName'}"></p>
-
-<pre><code>&lt;div ng-controller="MyController"&gt;
-</code></pre>
-
-<p>```</p>
-
-<p>Check out the <a href="http://seankenny.me/blog/2013/10/02/preloading-angularjs-data-in-net-land/">post</a> on ng-init to see how to hook this up with angularjs in more detail.</p>
 ]]></content>
   </entry>
   

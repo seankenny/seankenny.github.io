@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Webapi | Sean Kenny]]></title>
   <link href="http://www.seankenny.me/blog/categories/webapi/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-08-31T16:52:43+01:00</updated>
+  <updated>2014-09-28T08:57:17+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Web Api and AngularJS - JSON Vulnerability Protection Filter]]></title>
+    <link href="http://www.seankenny.me/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter/"/>
+    <updated>2014-09-28T08:50:48+01:00</updated>
+    <id>http://www.seankenny.me/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter</id>
+    <content type="html"><![CDATA[<h3>The Issue</h3>
+
+<p>From the AngularJS <a href="https://docs.angularjs.org/api/ng/service/$http#json-vulnerability-protection" target="_blank">documentation</a></p>
+
+<blockquote><p>A JSON vulnerability allows third party website to turn your JSON resource URL into JSONP request under some conditions. To counter this your server can prefix all JSON requests with following string &ldquo;)]}&lsquo;,\n&rdquo;. Angular will automatically strip the prefix before processing it as JSON.</p></blockquote>
+
+<p>Phil Haack outlines the issue <a href="http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/" target="_blank">here</a>.</p>
+
+<p>Can we automatically prepend <code>")]}',\n"</code> in Web Api?  Sure!</p>
+
+<h3>The code</h3>
+
+<p>I&rsquo;m going to create a custom JsonConverter by extending the Newtonsoft one that web api uses out of the box:</p>
+
+<p>```c#
+public class AngularArrayConverter : JsonConverter
+{</p>
+
+<pre><code>public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+{
+    writer.WriteRawValue(")]}',\n");
+
+    writer.WriteStartArray();
+
+    var items = value as IEnumerable;
+    if (items == null)
+    {
+        return;
+    }
+
+    foreach (var item in items)
+    {
+        serializer.Serialize(writer, item, item.GetType());
+    }
+    writer.WriteEndArray();
+}
+
+public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+{
+    throw new NotImplementedException();
+}
+
+public override bool CanConvert(Type objectType)
+{
+    // string is an IEnumerable.  This will ensure this converter is only used for arrays
+    return !(objectType == typeof(string)) &amp;&amp; typeof(IEnumerable).IsAssignableFrom(objectType);
+}
+
+public override bool CanRead
+{
+    get
+    {
+        return false;
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Then just plug it in using the WebApiConfig.cs class:</p>
+
+<p>```c#
+public static void Register(HttpConfiguration config)
+{</p>
+
+<pre><code>// other config stuff here
+...
+
+config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new AngularArrayConverter());
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Now using fiddler or wireshark we can see the results:</p>
+
+<p><code>javascript
+)]}',
+[{"id":1,"name":"Sean"},{"id":2,"name":"Mike"}]
+</code></p>
+
+<p>AngularJS will handle this automagically as per their documentation.</p>
+
+<p>HTH someone.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Custom OWIN IClaimsPrincipal With Ninject]]></title>
