@@ -14,19 +14,21 @@ So on another project, we needed to be able to see the calendar agenda day view 
 So I went ahead and forked the source on github.  The goal was to keep the forked version as similar to the core as possible - that way upstream merging should be easier.
 <!--more-->
 ###Demo
-[Here](http://embed.plnkr.co/8d16J15gKhE2IKCATspZ/preview) is a working demo of the plugin with resources.
+<a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21" target="_blank">Here</a> is a working demo of the plugin with resources.
 
 ###Code
-The source code of it is [here](https://github.com/seankenny/fullcalendar).  Get the V2 js and css from here - [https://github.com/seankenny/fullcalendar/tree/v2/dist](https://github.com/seankenny/fullcalendar/tree/v2/dist).
+The source code of it is <a href="https://github.com/seankenny/fullcalendar" target="_blank">here</a>.  Get the V2 js and css from here - <a href="https://github.com/seankenny/fullcalendar/tree/v2/dist" target="_blank">https://github.com/seankenny/fullcalendar/tree/v2/dist</a>.
 
 ###Usage
-The only difference to the consumer of the plugin is that there is a new option ('resources') and there is a new property on the `eventObject` named `resourceId` that we use to tie back to the relevant resource.
+The only difference to the consumer of the plugin is that there is a new option ('resources') and there is a new property on the `eventObject` named `resources` that we use to tie back to the relevant resource using the id.
+
+The resources option can contain either the resources objets or a url that will return a JSON array.
 
 ```javascript
 $('#calendar').fullCalendar({
   defaultView: 'resourceDay',
   resources: [{'id':'r1','name':'Resource 1'},{'id':'r2', 'name':'Resource 2'}],
-  //resources: 'data-url'  //you can use just a url to your resources data if you want 
+  //resources: 'https://data-url'  //you can use just a url to your resources data if you want 
   events: [
   {
     title: 'R1-R2: Lunch 14.00-15.00',

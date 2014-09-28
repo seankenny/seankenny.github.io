@@ -15,7 +15,7 @@ The ResourceDayView I've added is pretty much a clone of the AgendaDayView so he
 The <a href="https://github.com/arshaw/fullcalendar/wiki/Upgrading-to-v2" target="_blank">upgrade to v2</a> docs cover the diffs in detail.
 
 ###Demo
-Take a look at the plunkr demo <a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21/preview" target="_blank">here</a>.
+Take a look at the plunkr demo <a href="http://embed.plnkr.co/cX9dH8eTjKaddJ0Gpw21" target="_blank">here</a>.
 
 In the demo, pop open the developer tools (F12 in chrome) => console and you should see a console log for clicking on events, dragging events, etc.
 
