@@ -120,122 +120,12 @@
 
 <p>I&rsquo;m going to create a custom JsonConverter by extending the Newtonsoft one that web api uses out of the box:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AngularArrayConverter</span> <span class="p">:</span> <span class="n">JsonConverter</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">WriteJson</span><span class="p">(</span><span class="n">JsonWriter</span> <span class="n">writer</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">,</span> <span class="n">JsonSerializer</span> <span class="n">serializer</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">writer</span><span class="p">.</span><span class="n">WriteRawValue</span><span class="p">(</span><span class="s">&quot;)]}&#39;,\n&quot;</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">writer</span><span class="p">.</span><span class="n">WriteStartArray</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">items</span> <span class="p">=</span> <span class="k">value</span> <span class="k">as</span> <span class="n">IEnumerable</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">items</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="n">serializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">item</span><span class="p">.</span><span class="n">GetType</span><span class="p">());</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="n">writer</span><span class="p">.</span><span class="n">WriteEndArray</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="kt">object</span> <span class="nf">ReadJson</span><span class="p">(</span><span class="n">JsonReader</span> <span class="n">reader</span><span class="p">,</span> <span class="n">Type</span> <span class="n">objectType</span><span class="p">,</span> <span class="kt">object</span> <span class="n">existingValue</span><span class="p">,</span> <span class="n">JsonSerializer</span> <span class="n">serializer</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">CanConvert</span><span class="p">(</span><span class="n">Type</span> <span class="n">objectType</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// string is an IEnumerable.  This will ensure this converter is only used for arrays</span>
-</span><span class='line'>        <span class="k">return</span> <span class="p">!(</span><span class="n">objectType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">))</span> <span class="p">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="n">IEnumerable</span><span class="p">).</span><span class="n">IsAssignableFrom</span><span class="p">(</span><span class="n">objectType</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="n">CanRead</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">get</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then just plug it in using the WebApiConfig.cs class:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Register</span><span class="p">(</span><span class="n">HttpConfiguration</span> <span class="n">config</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="c1">// other config stuff here</span>
-</span><span class='line'>    <span class="p">...</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">JsonFormatter</span><span class="p">.</span><span class="n">SerializerSettings</span><span class="p">.</span><span class="n">Converters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">AngularArrayConverter</span><span class="p">());</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now using fiddler or wireshark we can see the results:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">)]}</span><span class="err">&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sean&quot;</span><span class="p">},{</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Mike&quot;</span><span class="p">}]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>AngularJS will handle this automagically as per their documentation.</p>
-
-<p>HTH someone.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/28/web-api-and-angularjs-json-vulnerability-protection-filter/">Read on &rarr;</a>
+    </footer>
   
 
 
