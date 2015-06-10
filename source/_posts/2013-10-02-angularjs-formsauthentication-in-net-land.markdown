@@ -74,18 +74,18 @@ So now we have a `$rootScope.user` object that has an `authenticated` property s
 public class AccountsController : ApiController
 {
     [HttpPost]
-    public HttpResponseMessage SomethingPrivate(UserDataModel user)
+    public HttpResponseMessage SomethingPrivate()
     {
-        // this will only be reached if the FromsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.
+        // this will only be reached if the FormsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.
     }
 }
 ```
 
 The sign out is:
 ```js
-$scope.signin = function(user) {
+$scope.signout = function() {
     $http.post('api/accounts/signout').
-        success(function(data, status, headers, config) {
+        success(function() {
             localStorageService.clearAll();
             $rootScope.user = {};
             $location.path('/');
@@ -98,16 +98,11 @@ Which calls the Web Api Accounts SignOut Controller Action
 public class AccountsController : ApiController
 {
     [HttpPost]
-    public HttpResponseMessage SignOut(UserDataModel user)
+    public HttpResponseMessage SignOut()
     {
-        if (this.ModelState.IsValid)
-        {
-            var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
-            FormsAuthentication.SignOut();
-            
-            return response;
-        }
-        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
+        var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
+        FormsAuthentication.SignOut();
+        return response;
     }
 }
 ```
