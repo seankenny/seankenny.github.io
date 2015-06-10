@@ -228,9 +228,9 @@
 </span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AccountsController</span> <span class="p">:</span> <span class="n">ApiController</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="na">    [HttpPost]</span>
-</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SomethingPrivate</span><span class="p">(</span><span class="n">UserDataModel</span> <span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SomethingPrivate</span><span class="p">()</span>
 </span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// this will only be reached if the FromsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.</span>
+</span><span class='line'>        <span class="c1">// this will only be reached if the FormsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -246,9 +246,9 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$scope</span><span class="p">.</span><span class="nx">signin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$scope</span><span class="p">.</span><span class="nx">signout</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 </span><span class='line'>    <span class="nx">$http</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;api/accounts/signout&#39;</span><span class="p">).</span>
-</span><span class='line'>        <span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 </span><span class='line'>            <span class="nx">localStorageService</span><span class="p">.</span><span class="nx">clearAll</span><span class="p">();</span>
 </span><span class='line'>            <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="p">{};</span>
 </span><span class='line'>            <span class="nx">$location</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
@@ -269,24 +269,14 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
 </pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">AccountsController</span> <span class="p">:</span> <span class="n">ApiController</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="na">    [HttpPost]</span>
-</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SignOut</span><span class="p">(</span><span class="n">UserDataModel</span> <span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">public</span> <span class="n">HttpResponseMessage</span> <span class="nf">SignOut</span><span class="p">()</span>
 </span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Created</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">SignOut</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateErrorResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">BadRequest</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="n">ModelState</span><span class="p">);</span>
+</span><span class='line'>        <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">CreateResponse</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Created</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">FormsAuthentication</span><span class="p">.</span><span class="n">SignOut</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -421,7 +411,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Sean Kenny -
+  Copyright &copy; 2015 - Sean Kenny -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Authentication | Sean Kenny]]></title>
   <link href="http://www.seankenny.me/blog/categories/authentication/atom.xml" rel="self"/>
   <link href="http://www.seankenny.me/"/>
-  <updated>2014-09-28T08:58:40+01:00</updated>
+  <updated>2015-06-10T19:56:43+01:00</updated>
   <id>http://www.seankenny.me/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -235,9 +235,9 @@ public class AccountsController : ApiController
 {</p>
 
 <pre><code>[HttpPost]
-public HttpResponseMessage SomethingPrivate(UserDataModel user)
+public HttpResponseMessage SomethingPrivate()
 {
-    // this will only be reached if the FromsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.
+    // this will only be reached if the FormsAuthentication cookie arrives in the request.  The [Authorize] filter will redirect to a HTTP 403 Forbidden Request if none is present.
 }
 </code></pre>
 
@@ -246,10 +246,10 @@ public HttpResponseMessage SomethingPrivate(UserDataModel user)
 
 <p>The sign out is:
 ```js
-$scope.signin = function(user) {</p>
+$scope.signout = function() {</p>
 
 <pre><code>$http.post('api/accounts/signout').
-    success(function(data, status, headers, config) {
+    success(function() {
         localStorageService.clearAll();
         $rootScope.user = {};
         $location.path('/');
@@ -265,16 +265,11 @@ public class AccountsController : ApiController
 {</p>
 
 <pre><code>[HttpPost]
-public HttpResponseMessage SignOut(UserDataModel user)
+public HttpResponseMessage SignOut()
 {
-    if (this.ModelState.IsValid)
-    {
-        var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
-        FormsAuthentication.SignOut();
-
-        return response;
-    }
-    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
+    var response = this.Request.CreateResponse(HttpStatusCode.Created, true);
+    FormsAuthentication.SignOut();
+    return response;
 }
 </code></pre>
 
